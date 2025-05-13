@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/12 16:06:33 by tcaccava          #+#    #+#             */
+/*   Updated: 2025/05/12 17:23:44 by tcaccava         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cube3d.h"
 
 void render_column(t_game *game, int column_x, t_ray *ray)
 {
     t_render r;
-
+    
     // Calcul des dimensions du mur
     r.corrected_dist = no_fish_eye(ray->distance, ray->radiant_angle, ray->player_angle);
     r.wall_height = calc_wall_height(r.corrected_dist);
@@ -21,22 +33,23 @@ void render_column(t_game *game, int column_x, t_ray *ray)
     
     // Vérifie si le rayon touche une porte
     if (is_door(game, ray->radiant_angle, ray->distance))
-        render_door(game, column_x, &r, ray);
+        render_door(game, column_x, &r);
     else
         render_wall(game, column_x, &r);
     
     render_floor(game, column_x, &r, ray);
 }
 
-void render_frame(t_game *game)
+void	render_frame(t_game *game)
 {
-    int col;
+	int	col;
+
 	col = 0;
-    while (col < DISPLAY_WIDTH)
-    {
-        render_column(game, col, &game->rays[col]);
-        col++;
-    }
-    mlx_put_image_to_window(game->mlx, game->win, game->screen.ptr, 0, 0);
-    render_weapon(game);
+	while (col < DISPLAY_WIDTH)
+	{
+		render_column(game, col, &game->rays[col]);
+		col++;
+	}
+	mlx_put_image_to_window(game->mlx, game->win, game->screen.ptr, 0, 0);
+	render_weapon(game);
 }

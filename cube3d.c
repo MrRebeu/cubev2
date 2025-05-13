@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube3d.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abkhefif <abkhefif@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:09:42 by tcaccava          #+#    #+#             */
-/*   Updated: 2025/05/10 23:42:13 by abkhefif         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:12:57 by tcaccava         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,36 +60,6 @@ t_intersect	h_intersection(int x_player, int y_player, double radiant_angle)
 	return (h);
 }
 
-int is_door(t_game *game, double ray_angle, double distance)
-{
-    // Calcule les coordonnées exactes du point d'impact
-    double hit_x = game->player.x + distance * cos(ray_angle);
-    double hit_y = game->player.y + distance * sin(ray_angle);
-    
-    // Convertit en coordonnées de la carte
-    int map_x = (int)(hit_x / TILE_SIZE);
-    int map_y = (int)(hit_y / TILE_SIZE);
-    
-    // Debug - imprime uniquement pour quelques rayons spécifiques pour éviter trop de logs
-    static int call_count = 0;
-    if (call_count % 100 == 0) {
-        printf("is_door check: map_x=%d, map_y=%d, cell=%c\n", 
-               map_x, map_y, 
-               (map_x >= 0 && map_x < game->map.width && 
-                map_y >= 0 && map_y < game->map.height) ? 
-                game->map.matrix[map_y][map_x] : '?');
-    }
-    call_count++;
-    
-    // Vérifie si ces coordonnées correspondent à une porte
-    if (map_x >= 0 && map_x < game->map.width && 
-        map_y >= 0 && map_y < game->map.height &&
-        game->map.matrix[map_y][map_x] == 'D')
-        return 1;
-    else
-        return 0;
-}
-
 int is_not_wall(t_map *map, double x, double y)
 {
     int map_x;
@@ -101,23 +71,32 @@ int is_not_wall(t_map *map, double x, double y)
     if (map_x < 0 || map_x >= map->width || map_y < 0 || map_y >= map->height)
         return (0);
     
-    // Vérifie si c'est un mur ou une porte
-    char cell = map->matrix[map_y][map_x];
-    if (cell == '1' || cell == 'D' || cell == 'P') // Ajoute tous les types d'obstacles que tu souhaites détecter
-        return (0);
+    // Check if the cell is a wall ('1')
+    if (map->matrix[map_y][map_x] == '1')
+        return (0);  // Not passable (it's a wall)
     else
-        return (1);
+        return (1);  // Passable (not a wall)
+}
+
+double	normalize_angle(double angle)
+{
+	while (angle < 0)
+		angle = angle + (2 * M_PI);
+	while (angle >= 2 * M_PI)
+		angle = angle - (2 * M_PI);
+	return (angle);
 }
 
 double ray_casting(t_game *game, double radiant_angle)
 {
     t_intersect v;
     t_intersect h;
-    double      dist_v;
-    double      dist_h;
-    char        v_hit_type = '0'; // Type d'objet touché par l'intersection verticale
-    char        h_hit_type = '0'; // Type d'objet touché par l'intersection horizontale
+    double dist_v;
+    double dist_h;
+    char v_hit_type = '0'; // Type d'objet touché par l'intersection verticale
+    char h_hit_type = '0'; // Type d'objet touché par l'intersection horizontale
 
+    radiant_angle = normalize_angle(radiant_angle);
     v = v_intersection(game->player.x, game->player.y, radiant_angle);
     h = h_intersection(game->player.x, game->player.y, radiant_angle);
     
@@ -152,41 +131,36 @@ double ray_casting(t_game *game, double radiant_angle)
     }
     
     // Calcul des distances
-    dist_v = sqrt((v.x - game->player.x) * (v.x - game->player.x) + 
-                  (v.y - game->player.y) * (v.y - game->player.y));
-    dist_h = sqrt((h.x - game->player.x) * (h.x - game->player.x) + 
-                  (h.y - game->player.y) * (h.y - game->player.y));
+    dist_v = sqrt(pow(v.x - game->player.x, 2) + pow(v.y - game->player.y, 2));
+    dist_h = sqrt(pow(h.x - game->player.x, 2) + pow(h.y - game->player.y, 2));
     
     // Détermination de l'intersection la plus proche et de son type
-    int ray_index = (int)(radiant_angle * DISPLAY_WIDTH / (2 * M_PI)) % DISPLAY_WIDTH;
-    if (ray_index < 0) ray_index += DISPLAY_WIDTH;
+    int ray_index = (int)((radiant_angle - game->player.angle + FOV / 2) / FOV * DISPLAY_WIDTH);
+    if (ray_index >= 0 && ray_index < DISPLAY_WIDTH)
+    {
+        if (dist_v < dist_h)
+        {
+            game->rays[ray_index].hit_type = v_hit_type;
+        }
+        else
+        {
+            game->rays[ray_index].hit_type = h_hit_type;
+        }
+    }
     
-    if (dist_v < dist_h)
-    {
-        // Stocke le type d'objet touché dans le rayon correspondant
-        int i = (int)((radiant_angle - game->player.angle + FOV / 2) / FOV * DISPLAY_WIDTH);
-        if (i >= 0 && i < DISPLAY_WIDTH)
-            game->rays[i].hit_type = v_hit_type;
-        return (dist_v);
-    }
-    else
-    {
-        // Stocke le type d'objet touché dans le rayon correspondant
-        int i = (int)((radiant_angle - game->player.angle + FOV / 2) / FOV * DISPLAY_WIDTH);
-        if (i >= 0 && i < DISPLAY_WIDTH)
-            game->rays[i].hit_type = h_hit_type;
-        return (dist_h);
-    }
+    return (fmin(dist_v, dist_h));
 }
-
 
 double	no_fish_eye(double min_distance, double radiant_angle,
 		double player_angle)
 {
 	double	corrected_dist;
+	double	angle_diff;
 
+	angle_diff = radiant_angle - player_angle;
+	angle_diff = normalize_angle(angle_diff);
 	// calcola la distanza perpendicolare
-	corrected_dist = min_distance * cos(radiant_angle - player_angle);
+	corrected_dist = min_distance * cos(angle_diff);
 	return (corrected_dist);
 }
 int	calc_wall_height(double corrected_dist)
@@ -194,8 +168,8 @@ int	calc_wall_height(double corrected_dist)
 	double	distance_to_projection_plane;
 	double	wall_height;
 
-	// calcola l'altezza del muro in funzione della distanza
-	distance_to_projection_plane = (DISPLAY_WIDTH / 2) / tan(FOV / 2);
-	wall_height = (TILE_SIZE / corrected_dist) * distance_to_projection_plane;
+	distance_to_projection_plane = (DISPLAY_WIDTH / 2.0) / tan(FOV / 2.0);
+	wall_height = (TILE_SIZE / fmax(corrected_dist, 1))
+		* distance_to_projection_plane;
 	return ((int)wall_height);
 }

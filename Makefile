@@ -7,8 +7,9 @@ LDFLAGS = -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm
 SRCS = main.c cube3d.c utils.c map.c  move_player.c game_loop.c
 RENDER_SRC = render/render.c render/render_env.c
 GNL_SRC = gnl/get_next_line.c gnl/get_next_line_utils.c init_game.c
+R_CASTING_SRC = ray_casting/ray_casting.c
 
-OBJS = $(SRCS:.c=.o) $(GNL_SRC:.c=.o) $(RENDER_SRC:.c=.o)
+OBJS = $(SRCS:.c=.o) $(GNL_SRC:.c=.o) $(RENDER_SRC:.c=.o) $(R_CASTING_SRC:.c=.o)
 RM = rm -f
 
 all : $(NAME)

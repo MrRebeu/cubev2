@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   game_loop.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/12 17:43:09 by tcaccava          #+#    #+#             */
+/*   Updated: 2025/05/12 17:43:10 by tcaccava         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cube3d.h"
 
 int close_window(void)
@@ -8,13 +20,19 @@ int close_window(void)
 
 int render_next_frame(t_game *game)
 {
+    // Move player based on pressed keys
     move_player(&game->player);
-
+    
+    // Update rays based on new position/orientation
+    update_rays(game);
+    
+    // Render the scene
     render_scene(game);
     
+    // Display the image on screen
     mlx_put_image_to_window(game->mlx, game->win, game->screen.ptr, 0, 0);
     
-    // Rendu des éléments d'interface (armes, etc.)
+    // Render UI elements (weapons, etc.)
     render_ui(game);
     
     return (0);

@@ -39,6 +39,8 @@ void init_player(t_player *player)
 	player->turn_back = false;
 }
 
+
+
 int	main(int argc, char **argv)
 {
 	t_game	game;
@@ -67,9 +69,9 @@ int	main(int argc, char **argv)
 			radiant_angle -= 2 * M_PI;
 		game.rays[i].radiant_angle = radiant_angle;
 		game.rays[i].player_angle = game.player.angle;
-		game.rays[i].hit_type = '0'; // Initialise le type
-		game.rays[i].distance = ray_casting(&game, radiant_angle);
-		i++;
+		// Pass the hit_type pointer to ray_casting
+        game.rays[i].distance = ray_casting(&game, radiant_angle);
+     	i++;
 	}
     loop_game(&game);
 

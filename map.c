@@ -63,6 +63,26 @@ int validate_map(t_map *map)
     return (1);
 }
 
+// Dans map.c, assure-toi que la signature correspond à la déclaration :
+int is_door(t_game *game, double ray_angle, double distance)
+{
+    // Calcule les coordonnées exactes du point d'impact
+    double hit_x = game->player.x + distance * cos(ray_angle);
+    double hit_y = game->player.y + distance * sin(ray_angle);
+    
+    // Convertit en coordonnées de la carte
+    int map_x = (int)(hit_x / TILE_SIZE);
+    int map_y = (int)(hit_y / TILE_SIZE);
+    
+    // Vérifie si ces coordonnées correspondent à une porte
+    if (map_x >= 0 && map_x < game->map.width && 
+        map_y >= 0 && map_y < game->map.height &&
+        game->map.matrix[map_y][map_x] == 'D')
+        return 1;
+    else
+        return 0;
+}
+
 int set_player_pos(t_game *game)
 {
     int y;
