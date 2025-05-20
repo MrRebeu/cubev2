@@ -1,15 +1,25 @@
 NAME = cube3d
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I$(MLX_DIR)
+CFLAGS = -Wall -Wextra -Werror -I$(MLX_DIR) -I./
 MLX_DIR = ./minilibx-linux
 LDFLAGS = -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm
 
-SRCS = main.c cube3d.c utils.c map.c  move_player.c game_loop.c
-RENDER_SRC = render/render.c render/render_env.c
-GNL_SRC = gnl/get_next_line.c gnl/get_next_line_utils.c init_game.c
-R_CASTING_SRC = ray_casting/ray_casting.c
+CORE_SRC = core/main.c core/game_loop.c core/init_game.c
+RAYCASTER_SRC = raycaster/raycasting.c raycaster/ray_utils.c
+MAP_SRC = map/map_parser.c
+PLAYER_SRC = player/player_move.c
+PNJ_SRC = pnj/pnj.c
+RENDER_SRC = render/render.c render/render_env.c render/render_ui.c render/render_minimap.c render/render_health_bar.c
+GNL_SRC = gnl/get_next_line.c gnl/get_next_line_utils.c
+SHOOT_SRC = shoot/shoot.c
+PORTAL_SRC = portal/portal.c
+INIT_SRC = init/init_minimap.c init/init_health_bar.c
+DOOR_SRC = door/door.c door/init_doors.c
+#PORTAL_SRC = portal/portal.c
 
-OBJS = $(SRCS:.c=.o) $(GNL_SRC:.c=.o) $(RENDER_SRC:.c=.o) $(R_CASTING_SRC:.c=.o)
+SRCS = $(CORE_SRC) $(RAYCASTER_SRC) $(MAP_SRC) $(PLAYER_SRC) $(RENDER_SRC) $(GNL_SRC) $(PNJ_SRC) $(SHOOT_SRC) $(PORTAL_SRC) $(INIT_SRC) $(DOOR_SRC)# $(PORTAL_SRC)
+
+OBJS = $(SRCS:.c=.o)
 RM = rm -f
 
 all : $(NAME)

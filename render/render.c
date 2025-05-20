@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abkhefif <abkhefif@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 16:06:33 by tcaccava          #+#    #+#             */
-/*   Updated: 2025/05/12 17:23:44 by tcaccava         ###   ########.fr       */
+/*   Updated: 2025/05/18 18:14:46 by abkhefif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,50 @@
 
 void render_column(t_game *game, int column_x, t_ray *ray)
 {
-    t_render r;
-    
-    // Calcul des dimensions du mur
-    r.corrected_dist = no_fish_eye(ray->distance, ray->radiant_angle, ray->player_angle);
-    r.wall_height = calc_wall_height(r.corrected_dist);
-    r.draw_start = (DISPLAY_HEIGHT / 2) - (r.wall_height / 2);
-    r.draw_end = (DISPLAY_HEIGHT / 2) + (r.wall_height / 2);
-    
-    // Ajustement des limites
-    if (r.draw_start < 0)
-        r.draw_start = 0;
-    if (r.draw_end >= DISPLAY_HEIGHT)
-        r.draw_end = DISPLAY_HEIGHT - 1;
-    
-    // Rendu des différentes parties de la colonne
-    render_sky(game, column_x, &r);
-    
-    // Vérifie si le rayon touche une porte
-    if (is_door(game, ray->radiant_angle, ray->distance))
-        render_door(game, column_x, &r);
-    else
-        render_wall(game, column_x, &r);
-    
-    render_floor(game, column_x, &r, ray);
-}
+    t_render renderer;
 
+    /* 1. Calculate wall dimensions */
+    // Correct distance to prevent fisheye effect
+    renderer.corrected_dist = no_fish_eye(ray->distance, ray->radiant_angle, ray->player_angle);
+    
+    // Calculate wall and door height on screen
+    renderer.wall_height = calc_wall_height(renderer.corrected_dist);
+    renderer.door_height = (int)(renderer.wall_height * 1.3);  // Doors are 30% taller than walls
+    
+    /* 2. Determine vertical rendering boundaries */
+    renderer.draw_start = (DISPLAY_HEIGHT / 2) - (renderer.wall_height / 2) + game->pitch;
+    renderer.draw_end = (DISPLAY_HEIGHT / 2) + (renderer.wall_height / 2) + game->pitch;
+    
+    // Handle texture offset for very tall walls
+    renderer.texture_offset_y = 0;
+    if (renderer.wall_height > DISPLAY_HEIGHT)
+        renderer.texture_offset_y = (renderer.wall_height - DISPLAY_HEIGHT) / 2;
+    
+    // Clamp values to screen dimensions
+    if (renderer.draw_start < 0)
+        renderer.draw_start = 0;
+    if (renderer.draw_end >= DISPLAY_HEIGHT)
+        renderer.draw_end = DISPLAY_HEIGHT - 1;
+    
+    /* 3. Render column sequentially (from top to bottom) */
+    // Render sky (top portion)
+    //render_sky(game, column_x, &renderer);
+    
+    // Render wall or door based on hit type
+    if (ray->hit_type == 'P')
+        render_wall_portal(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'D')
+        render_door(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'i')
+        render_wall_shooted(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'd')
+        render_door_shooted(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'O')
+         render_door_frame(game, column_x, &renderer, ray);
+    else
+        render_wall(game, column_x, &renderer, ray);
+    render_floor(game, column_x, &renderer);
+}
 void	render_frame(t_game *game)
 {
 	int	col;
@@ -53,3 +71,5 @@ void	render_frame(t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->screen.ptr, 0, 0);
 	render_weapon(game);
 }
+
+
