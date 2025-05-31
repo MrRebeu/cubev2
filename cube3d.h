@@ -456,12 +456,12 @@ int						place_enemy_at_position(t_game *game, int x, int y,
 int						set_enemy_pos(t_game *game);
 
 // ========== PLAYER FUNCTIONS ==========
-// player/player_move.c
-int						key_release(int keycode, t_player *player);
-int						key_press(int keycode, t_player *player);
-int						mouse_move(int x, int y, t_game *game);
-int						is_wall(t_game *game, float x, float y);
-void					move_player(t_player *player);
+// // player/player_move.c
+// int						key_release(int keycode, t_player *player);
+// int						key_press(int keycode, t_player *player);
+// int						mouse_move(int x, int y, t_game *game);
+// int						is_wall(t_game *game, float x, float y);
+// void					move_player(t_player *player);
 
 // ========== RAYCASTER FUNCTIONS ==========
 // raycaster/raycasting.c
@@ -890,5 +890,64 @@ void    set_wall_pixel_color(t_game *game, int x, int y, unsigned int color);
 
 void	render_shooted_open_door(t_game *game, int column_x, t_render *renderer, t_ray *ray);
 void	apply_damage_effect(unsigned int color, unsigned int *damaged_color);
+
+// ========== PLAYER FUNCTIONS ==========
+// player/player_move.c (coordinateur principal)
+void					move_player(t_player *player);
+
+// player/movement/player_movement.c
+void					move_forward(t_player *player, float speed);
+void					move_backward(t_player *player, float speed);
+void					move_strafe_left(t_player *player, float speed);
+void					move_strafe_right(t_player *player, float speed);
+void					process_movement_keys(t_player *player);
+
+// player/movement/player_rotation.c
+void					rotate_left(t_player *player, float angle_speed);
+void					rotate_right(t_player *player, float angle_speed);
+void					turn_around(t_player *player);
+void					normalize_player_angle(t_player *player);
+void					process_rotation_keys(t_player *player);
+
+// player/input/player_keyboard.c
+int						key_press(int keycode, t_player *player);
+int						key_release(int keycode, t_player *player);
+void					handle_movement_keys_press(int keycode, t_player *player);
+void					handle_movement_keys_release(int keycode, t_player *player);
+void					handle_rotation_keys_press(int keycode, t_player *player);
+
+// player/input/player_weapon_switch.c
+void					handle_weapon_keys_press(int keycode, t_player *player);
+void					switch_to_hands(t_player *player);
+void					switch_to_raygun(t_player *player);
+void					switch_to_portalgun(t_player *player);
+void					switch_to_healgun(t_player *player);
+
+// player/input/player_mouse.c
+int						mouse_move(int x, int y, t_game *game);
+void					apply_mouse_rotation(t_game *game, int delta_x, int delta_y);
+void					clamp_pitch(t_game *game);
+void					handle_rotation_keys_release(int keycode, t_player *player);
+
+// player/pickup/player_pickup.c
+void					check_weapon_pickup(t_player *player);
+void					process_weapon_pickup(t_player *player, char cell_type, int map_x, int map_y);
+void					pickup_raygun(t_player *player, int map_x, int map_y);
+void					pickup_portalgun(t_player *player, int map_x, int map_y);
+void					pickup_healgun(t_player *player, int map_x, int map_y);
+
+// player/pickup/player_pickup_healgun.c
+void					pickup_healgun_first_time(t_player *player, int map_x, int map_y);
+void					pickup_healgun_ammo(t_player *player, int map_x, int map_y);
+void					reload_healgun_if_empty(t_player *player);
+int						is_valid_pickup_position(t_game *game, int map_x, int map_y);
+void					handle_action_keys_press(int keycode, t_player *player);
+
+// player/utils/player_utils.c
+int						is_wall(t_game *game, float x, float y);
+void					update_player_position(t_player *player);
+int						validate_player_game(t_player *player);
+int						can_move_to_position(t_game *game, float x, float y);
+void					apply_movement_bounds(t_player *player, float *new_x, float *new_y);
 
 #endif

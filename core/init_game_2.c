@@ -44,6 +44,8 @@ void	init_player(t_player *player)
     player->healgun_animating = 0;
     player->healgun_anim_frame = 0;
     player->healgun_anim_timer = 0;
+	player->move_speed = 10;   
+	player->rot_speed = 0.05;
 
 }
 
