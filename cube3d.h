@@ -871,4 +871,24 @@ int		load_single_door_sprite(t_game *game, int index);
 int		load_door_shooted_texture(t_game *game);
 int		load_open_door_shooted_texture(t_game *game);
 
+// ========== WALLS FUNCTIONS ==========
+// walls/wall_basic.c
+void    render_wall(t_game *game, int column_x, t_render *renderer, t_ray *ray);
+
+// walls/wall_shot.c  
+void    render_wall_shooted(t_game *game, int column_x, t_render *renderer, t_ray *ray);
+
+// walls/wall_portal.c
+void    render_wall_portal(t_game *game, int column_x, t_render *renderer, t_ray *ray);
+
+// walls/wall_textures.c
+t_img   *get_wall_texture(t_game *game, t_ray *ray);
+
+// walls/wall_utils.c
+int     calculate_texture_y_from_position(int y, int cy, double h);
+void    set_wall_pixel_color(t_game *game, int x, int y, unsigned int color);
+
+void	render_shooted_open_door(t_game *game, int column_x, t_render *renderer, t_ray *ray);
+void	apply_damage_effect(unsigned int color, unsigned int *damaged_color);
+
 #endif

@@ -67,3 +67,18 @@ int	load_single_door_sprite(t_game *game, int index)
 	setup_texture_data(&game->open_doors[index].sprite, width, height);
 	return (1);
 }
+
+void	apply_damage_effect(unsigned int color, unsigned int *damaged_color)
+{
+	int	red;
+	int	green;
+	int	blue;
+
+	red = (color >> 16) & 0xFF;
+	green = (color >> 8) & 0xFF;
+	blue = color & 0xFF;
+	red = (int)(red * 0.7);
+	green = (int)(green * 0.7);
+	blue = (int)(blue * 0.7);
+	*damaged_color = (red << 16) | (green << 8) | blue;
+}
