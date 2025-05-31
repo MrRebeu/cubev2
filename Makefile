@@ -12,12 +12,13 @@ PLAYER_SRC = player/player_move.c player/movement/player_movement.c player/movem
 ENEMY_SRC = enemy/enemy_core.c enemy/enemy_ai.c enemy/enemy_animation.c enemy/enemy_render.c enemy/enemy_sprite.c
 RENDER_SRC = render/render_core.c render/render_weapons.c render/render_floor.c render/render_weapon_pickups.c 
 GNL_SRC = gnl/get_next_line.c gnl/get_next_line_utils.c
-SHOOT_SRC = shoot/shoot_core.c shoot/shoot_portal.c shoot/shoot_raygun.c shoot/shoot_utils.c shoot/shoot_portal_utils.c
+SHOOT_SRC = shoot/shoot_core.c shoot/shoot_portal.c shoot/shoot_raygun.c shoot/shoot_utils.c 
 PORTAL_SRC = portal/portal_init.c portal/portal_create.c portal/portal_teleport.c portal/portal_utils.c portal/portal_cleanup.c portal/portal_utils2.c
 DOOR_SRC = door/door_core.c door/door_render.c door/door_textures.c door/door_textures_2.c door/door_sprites.c door/door_utils.c
 LASER_SRC = laser/laser.c
 HEAL_SRC = heal/heal_system.c heal/heal_animation.c heal/heal_render.c heal/heal_utils.c heal/heal_loader.c
 WALLS_SRC = walls/wall_basic.c walls/wall_shot.c walls/wall_portal.c walls/wall_textures.c walls/wall_utils.c
+WEAPON_SRC = weapon/weapon_core.c weapon/weapon_render.c weapon/weapon_utils.c weapon/weapon_loader.c
 
 SRCS = $(CORE_SRC) $(RAYCASTER_SRC) $(MAP_SRC) $(PLAYER_SRC) $(RENDER_SRC) $(GNL_SRC) $(ENEMY_SRC) $(SHOOT_SRC) $(PORTAL_SRC) $(UI_SRC) $(DOOR_SRC) $(LASER_SRC) $(HEAL_SRC) $(WALLS_SRC)
 

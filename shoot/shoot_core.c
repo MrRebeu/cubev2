@@ -38,7 +38,7 @@ void	handle_left_click(t_game *game)
 	else if (game->current_weapon == PORTALGUN)
 		shoot_portalgun(game);
 	else if (game->current_weapon == HEALGUN)
-		shoot_healgun(game);
+		use_healgun(game);
 }
 
 void	handle_scroll_wheel(t_game *game, int button)
