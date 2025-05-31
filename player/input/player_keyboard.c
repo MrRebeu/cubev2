@@ -1,4 +1,3 @@
-
 #include "../../cube3d.h"
 
 int	key_press(int keycode, t_player *player)

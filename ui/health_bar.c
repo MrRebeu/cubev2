@@ -13,7 +13,6 @@ void init_health_bar(t_game *game)
     game->health_bar.width = 500;
     game->health_bar.height = 40;
     game->health_bar.border = 5;
-    
     game->health_bar.border_color = 0x000000;
     game->health_bar.empty_color = 0x555555;
     game->health_bar.health_color = 0xFF0000;
@@ -23,7 +22,8 @@ void draw_health_bar_border(t_game *game)
 {
     t_health_bar *life_bar = &game->health_bar;
     char *pixel;
-    int x, y;
+    int x;
+    int y;
 
     y = life_bar->y;
     while (y < life_bar->y + life_bar->height)
@@ -43,7 +43,8 @@ void draw_health_bar_background(t_game *game)
 {
     t_health_bar *life_bar = &game->health_bar;
     char *pixel;
-    int x, y;
+    int x;
+    int y;
 
     y = life_bar->y + life_bar->border;
     while (y < life_bar->y + life_bar->height - life_bar->border)

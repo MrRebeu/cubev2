@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 void	remove_all_portals(t_game *game)

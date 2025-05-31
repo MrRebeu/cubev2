@@ -42,30 +42,3 @@ void	init_weapon_paths(const char paths[MAX_WEAPONS][3])
 	init_raygun_paths(paths[RAYGUN]);
 	init_healgun_paths(paths[HEALGUN]);
 }
-
-void	init_hands_paths(const char paths[3])
-{
-	paths[0] = "./texture/hands.xpm";
-	paths[1] = "./texture/hands.xpm";
-	paths[2] = "./texture/hands.xpm";
-}
-
-void	init_portalgun_paths(const char paths[3])
-{
-	paths[0] = "./texture/w_portalgun.xpm";
-	paths[1] = "./texture/w_portalgun.xpm";
-	paths[2] = "./texture/w_portalgun.xpm";
-}
-void	init_raygun_paths(const char paths[3])
-{
-	paths[0] = "./texture/w_raygun.xpm";
-	paths[1] = "./texture/w_raygun_prefire.xpm";
-	paths[2] = "./texture/w_raygun_fire.xpm";
-}
-
-void	init_healgun_paths(const char paths[3])
-{
-	paths[0] = "./texture/w_healgun.xpm";
-	paths[1] = "./texture/w_healgun.xpm";
-	paths[2] = "./texture/w_healgun.xpm";
-}

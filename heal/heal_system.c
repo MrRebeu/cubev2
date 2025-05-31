@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 void	use_healgun(t_game *game)
@@ -39,6 +38,6 @@ void	consume_heal_ammo(t_game *game)
 void	apply_healing(t_game *game)
 {
 	game->player.health = 100;
-	printf("💉 Heal Gun utilisé ! Santé: %d, Munitions: %d\n", 
-		   game->player.health, game->player.healgun_ammo);
+	printf("💉 Heal Gun utilisé ! Santé: %d, Munitions: %d\n",
+		game->player.health, game->player.healgun_ammo);
 }

@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 int	load_hands(t_game *game)
@@ -6,7 +5,7 @@ int	load_hands(t_game *game)
 	int	width;
 	int	height;
 
-	game->weapons[HANDS][0].ptr = mlx_xpm_file_to_image(game->mlx, 
+	game->weapons[HANDS][0].ptr = mlx_xpm_file_to_image(game->mlx,
 			"./texture/hand.xpm", &width, &height);
 	if (!game->weapons[HANDS][0].ptr)
 	{
@@ -21,8 +20,8 @@ void	setup_hands_texture(t_game *game, int width, int height)
 {
 	game->weapons[HANDS][0].width = width;
 	game->weapons[HANDS][0].height = height;
-	game->weapons[HANDS][0].addr = mlx_get_data_addr(game->weapons[HANDS][0].ptr,
-			&game->weapons[HANDS][0].bits_per_pixel,
+	game->weapons[HANDS][0].addr = mlx_get_data_addr(game->weapons[HANDS][0]
+			.ptr, &game->weapons[HANDS][0].bits_per_pixel,
 			&game->weapons[HANDS][0].line_length,
 			&game->weapons[HANDS][0].endian);
 	game->weapons[HANDS][1] = game->weapons[HANDS][0];

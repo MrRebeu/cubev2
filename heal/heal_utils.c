@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 int	is_pixel_in_bounds(int x, int y)
@@ -14,8 +13,8 @@ char	*get_sprite_pixel(t_img *sprite, int x, int y)
 {
 	char	*pixel;
 
-	pixel = sprite->addr + (y * sprite->line_length + 
-			x * (sprite->bits_per_pixel / 8));
+	pixel = sprite->addr + (y * sprite->line_length
+			+ x * (sprite->bits_per_pixel / 8));
 	return (pixel);
 }
 
@@ -23,8 +22,8 @@ char	*get_screen_pixel(t_game *game, int x, int y)
 {
 	char	*pixel;
 
-	pixel = game->screen.addr + (y * game->screen.line_length + 
-			x * (game->screen.bits_per_pixel / 8));
+	pixel = game->screen.addr + (y * game->screen.line_length
+			+ x * (game->screen.bits_per_pixel / 8));
 	return (pixel);
 }
 

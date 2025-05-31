@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 char	*get_orientation_name(int orientation)

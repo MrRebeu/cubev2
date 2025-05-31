@@ -1,4 +1,3 @@
-
 #include "../../cube3d.h"
 
 int	is_wall(t_game *game, float x, float y)

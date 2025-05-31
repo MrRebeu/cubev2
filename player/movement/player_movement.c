@@ -7,9 +7,11 @@ void	move_forward(t_player *player, float speed)
 
 	new_x = player->x + cos(player->angle) * speed;
 	new_y = player->y + sin(player->angle) * speed;
-	if (player->game && is_not_wall_for_movement(&player->game->map, new_x, player->y))
+	if (player->game && is_not_wall_for_movement(&player->game->map,
+			new_x, player->y))
 		player->x = new_x;
-	if (player->game && is_not_wall_for_movement(&player->game->map, player->x, new_y))
+	if (player->game && is_not_wall_for_movement(&player->game->map,
+			player->x, new_y))
 		player->y = new_y;
 }
 

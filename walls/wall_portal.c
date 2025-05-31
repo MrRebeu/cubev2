@@ -8,16 +8,16 @@ static void	calculate_portal_texture_coordinates(t_render *renderer, t_ray *ray)
 		renderer->tex_x = (int)(ray->wall_hit_x) % TILE_SIZE;
 }
 
-static void	render_portal_pixel(t_game *game, t_render *renderer, 
+static void	render_portal_pixel(t_game *game, t_render *renderer,
 				int column_x, int texture_y)
 {
 	renderer->tex_addr = game->map.wall_portal_texture.addr
-		+ (texture_y * game->map.wall_portal_texture.line_length
-		+ renderer->tex_x * (game->map.wall_portal_texture.bits_per_pixel / 8));
+		+ (texture_y * game->map.wall_portal_texture.line_length + renderer
+			->tex_x * (game->map.wall_portal_texture.bits_per_pixel / 8));
 	renderer->color = *(unsigned int *)renderer->tex_addr;
 	renderer->screen_pixel = game->screen.addr
 		+ (renderer->y * game->screen.line_length
-		+ column_x * (game->screen.bits_per_pixel / 8));
+			+ column_x * (game->screen.bits_per_pixel / 8));
 	*(unsigned int *)renderer->screen_pixel = renderer->color;
 }
 
@@ -47,7 +47,7 @@ static void	render_portal_column(t_game *game, t_render *renderer, int column_x)
 	}
 }
 
-void	render_wall_portal(t_game *game, int column_x, 
+void	render_wall_portal(t_game *game, int column_x,
 			t_render *renderer, t_ray *ray)
 {
 	calculate_portal_texture_coordinates(renderer, ray);

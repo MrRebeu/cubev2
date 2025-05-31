@@ -1,4 +1,3 @@
-
 #include "../../cube3d.h"
 
 void	rotate_left(t_player *player, float angle_speed)

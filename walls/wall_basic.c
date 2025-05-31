@@ -30,7 +30,7 @@ static void	calculate_wall_texture_y(t_render *renderer, int cy, double h)
 	renderer->tex_y = texture_y;
 }
 
-static void	render_wall_pixel(t_game *game, t_img *texture, 
+static void	render_wall_pixel(t_game *game, t_img *texture,
 				t_render *renderer, int column_x)
 {
 	renderer->tex_addr = texture->addr + (renderer->tex_y * texture->line_length
@@ -38,12 +38,12 @@ static void	render_wall_pixel(t_game *game, t_img *texture,
 	renderer->color = *(unsigned int *)renderer->tex_addr;
 	renderer->screen_pixel = game->screen.addr
 		+ (renderer->y * game->screen.line_length
-		+ column_x * (game->screen.bits_per_pixel / 8));
+			+ column_x * (game->screen.bits_per_pixel / 8));
 	*(unsigned int *)renderer->screen_pixel = renderer->color;
 }
 
 static void	render_wall_column(t_game *game, t_img *texture,
-				t_render *renderer, int column_x)
+		t_render *renderer, int column_x)
 {
 	int		cy;
 	double	h;

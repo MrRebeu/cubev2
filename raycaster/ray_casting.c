@@ -34,7 +34,7 @@ static void	cast_horizontal_ray(t_intersect *h, t_map *map)
 	}
 }
 
-static double	calculate_distances_and_store(t_game *game, t_intersect *v, 
+static double	calculate_distances_and_store(t_game *game, t_intersect *v,
 				t_intersect *h, int column_x)
 {
 	double	dist_v;

@@ -1,6 +1,6 @@
 #include "../cube3d.h"
 
-static void	calculate_vertical_first_intersection(int x_player, int y_player, 
+static void	calculate_vertical_first_intersection(int x_player, int y_player,
 			double radiant_angle, t_intersect *v)
 {
 	double	first_x;
@@ -33,7 +33,8 @@ t_intersect	v_intersection(int x_player, int y_player, double radiant_angle)
 	v.step_y = 0;
 	if (fabs(cos(radiant_angle)) < 0.000001)
 		return (v);
-	calculate_vertical_first_intersection(x_player, y_player, radiant_angle, &v);
+	calculate_vertical_first_intersection(x_player, y_player,
+		radiant_angle, &v);
 	return (v);
 }
 
@@ -73,6 +74,7 @@ t_intersect	h_intersection(int x_player, int y_player, double radiant_angle)
 	h.step_y = 0;
 	if (fabs(sin(radiant_angle)) < 0.000001)
 		return (h);
-	calculate_horizontal_first_intersection(x_player, y_player, radiant_angle, &h);
+	calculate_horizontal_first_intersection(x_player, y_player,
+		radiant_angle, &h);
 	return (h);
 }

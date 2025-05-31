@@ -1,16 +1,12 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   crosshair.c - Réticule de visée                                        */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../cube3d.h"
 
-void draw_crosshair_line(t_game *game, int center_x, int center_y, int size, unsigned int color, int is_vertical)
+void draw_crosshair_line(t_game *game, int center_x, int center_y,
+        int size, unsigned int color, int is_vertical)
 {
     char *pixel;
-    int i = -size;
+    int i;
     
+    i = -size;
     while (i <= size)
     {
         if (is_vertical)
@@ -37,11 +33,15 @@ void draw_crosshair_line(t_game *game, int center_x, int center_y, int size, uns
 
 void draw_crosshair(t_game *game)
 {
-    int center_x = DISPLAY_WIDTH / 2;
-    int center_y = DISPLAY_HEIGHT / 2;
-    int size = 5;
-    unsigned int color = 0x000000;
+    int center_x;
+    int center_y;
+    int size;
+    unsigned int color;
     
+    center_x = DISPLAY_WIDTH / 2;
+    center_y = DISPLAY_HEIGHT / 2;
+    size = 5;
+    color = 0x000000;
     draw_crosshair_line(game, center_x, center_y, size, color, 1); // Vertical
     draw_crosshair_line(game, center_x, center_y, size, color, 0); // Horizontal
 }

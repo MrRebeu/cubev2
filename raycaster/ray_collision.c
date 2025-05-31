@@ -2,16 +2,16 @@
 
 static int	is_solid_cell(char cell)
 {
-	if (cell == '1' || cell == 'D' || cell == 'P' || cell == 'i' || 
-		cell == 'd' || cell == 'M')
+	if (cell == '1' || cell == 'D' || cell == 'P' || cell == 'i'
+		|| cell == 'd' || cell == 'M')
 		return (1);
 	return (0);
 }
 
 static int	is_movement_blocking_cell(char cell)
 {
-	if (cell == '1' || cell == 'D' || cell == 'P' || cell == 'i' || 
-		cell == 'd' || cell == 'M' || cell == 'L')
+	if (cell == '1' || cell == 'D' || cell == 'P' || cell == 'i'
+		|| cell == 'd' || cell == 'M' || cell == 'L')
 		return (1);
 	return (0);
 }

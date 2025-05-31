@@ -35,8 +35,8 @@ void	print_portal_created(int portal_num, int x, int y, int orientation)
 	char	*direction;
 
 	direction = get_orientation_name(orientation);
-	printf("Portal %d created at [%d, %d], orientation: %s\n", 
-		   portal_num, x, y, direction);
+	printf("Portal %d created at [%d, %d], orientation: %s\n",
+		portal_num, x, y, direction);
 }
 
 void	print_portal_reset(int x, int y, int orientation)
@@ -44,6 +44,6 @@ void	print_portal_reset(int x, int y, int orientation)
 	char	*direction;
 
 	direction = get_orientation_name(orientation);
-	printf("New portals, first at [%d, %d], orientation: %s\n", 
-		   x, y, direction);
+	printf("New portals, first at [%d, %d], orientation: %s\n",
+		x, y, direction);
 }

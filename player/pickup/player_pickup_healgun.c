@@ -1,4 +1,3 @@
-
 #include "../../cube3d.h"
 
 void	pickup_healgun_first_time(t_player *player, int map_x, int map_y)

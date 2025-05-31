@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   weapon_pickup.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 XX:XX:XX by tcaccava          #+#    #+#             */
-/*   Updated: 2025/05/26 XX:XX:XX by tcaccava         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../cube3d.h"
 
 int	count_weapons_in_map(t_game *game)
@@ -52,7 +41,8 @@ int	load_weapon_pickup_sprites(t_game *game)
 		game->weapon_pickup = NULL;
 		return (1);
 	}
-	game->weapon_pickup = malloc(sizeof(t_weapon_pickup) * game->num_weapon_pickup);
+	game->weapon_pickup = malloc(sizeof(t_weapon_pickup)
+			* game->num_weapon_pickup);
 	if (!game->weapon_pickup)
 		return (0);
 	init_weapon_pickup_array(game);
@@ -77,7 +67,8 @@ int	load_weapon_pickup_sprite(t_game *game, t_weapon_pickup *pickup, char *path)
 	int	width;
 	int	height;
 
-	pickup->sprite.ptr = mlx_xpm_file_to_image(game->mlx, path, &width, &height);
+	pickup->sprite.ptr = mlx_xpm_file_to_image(game->mlx, path, &width,
+			&height);
 	if (!pickup->sprite.ptr)
 		return (0);
 	pickup->sprite.width = width;
@@ -85,29 +76,5 @@ int	load_weapon_pickup_sprite(t_game *game, t_weapon_pickup *pickup, char *path)
 	pickup->sprite.addr = mlx_get_data_addr(pickup->sprite.ptr,
 			&pickup->sprite.bits_per_pixel, &pickup->sprite.line_length,
 			&pickup->sprite.endian);
-	return (1);
-}
-
-int	set_weapon_positions(t_game *game)
-{
-	int	y;
-	int	x;
-	int	weapon_index;
-
-	if (game->num_weapon_pickup == 0)
-		return (1);
-	weapon_index = 0;
-	y = 0;
-	while (y < game->map.height)
-	{
-		x = 0;
-		while (x < game->map.width)
-		{
-			if (is_weapon_cell(game->map.matrix[y][x]) && weapon_index < game->num_weapon_pickup)
-				setup_weapon_at_position(game, x, y, &weapon_index);
-			x++;
-		}
-		y++;
-	}
 	return (1);
 }

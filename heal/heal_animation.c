@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 void	update_healgun_animation(t_game *game)
@@ -13,7 +12,7 @@ void	update_healgun_animation(t_game *game)
 void	advance_heal_frame(t_game *game)
 {
 	int	frame_durations[5];
-	
+
 	set_frame_durations(frame_durations);
 	game->player.healgun_anim_frame++;
 	if (game->player.healgun_anim_frame >= 5)
@@ -40,6 +39,7 @@ void	finish_heal_animation(t_game *game)
 
 void	set_next_frame_timer(t_game *game, int frame_durations[5])
 {
-	game->player.healgun_anim_timer = frame_durations[game->player.healgun_anim_frame];
+	game->player.healgun_anim_timer = frame_durations
+	[game->player.healgun_anim_frame];
 	printf("💉 Frame healgun: %d\n", game->player.healgun_anim_frame);
 }

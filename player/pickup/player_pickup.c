@@ -1,4 +1,3 @@
-
 #include "../../cube3d.h"
 
 void	check_weapon_pickup(t_player *player)
@@ -17,7 +16,8 @@ void	check_weapon_pickup(t_player *player)
 	process_weapon_pickup(player, cell_type, player_map_x, player_map_y);
 }
 
-void	process_weapon_pickup(t_player *player, char cell_type, int map_x, int map_y)
+void	process_weapon_pickup(t_player *player, char cell_type,
+		int map_x, int map_y)
 {
 	if (cell_type == 'R')
 		pickup_raygun(player, map_x, map_y);
@@ -46,7 +46,8 @@ void	pickup_portalgun(t_player *player, int map_x, int map_y)
 		player->has_weapon[PORTALGUN] = true;
 		player->current_weapon = PORTALGUN;
 		player->game->current_weapon = PORTALGUN;
-		disable_weapon_pickup_at_position(player->game, map_x, map_y, PORTALGUN);
+		disable_weapon_pickup_at_position(player->game,
+			map_x, map_y, PORTALGUN);
 	}
 }
 

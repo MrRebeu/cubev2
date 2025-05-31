@@ -15,16 +15,15 @@ void	move_player(t_player *player)
 		player->angle += 2 * M_PI;
 	while (player->angle >= 2 * M_PI)
 		player->angle -= 2 * M_PI;
-	update_camera_vectors(player); // ⚠️ CRUCIAL !
-    if (player->key_up)
-        move_forward(player, player->move_speed);
-    if (player->key_down)
-        move_backward(player, player->move_speed);
-    if (player->key_left)
-        move_strafe_left(player, player->move_speed);
-    if (player->key_right)
-        move_strafe_right(player, player->move_speed);
-
-    check_portal_teleportation(player->game);
-    check_weapon_pickup(player);
+	update_camera_vectors(player);
+	if (player->key_up)
+		move_forward(player, player->move_speed);
+	if (player->key_down)
+		move_backward(player, player->move_speed);
+	if (player->key_left)
+		move_strafe_left(player, player->move_speed);
+	if (player->key_right)
+		move_strafe_right(player, player->move_speed);
+	check_portal_teleportation(player->game);
+	check_weapon_pickup(player);
 }

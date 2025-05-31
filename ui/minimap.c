@@ -1,12 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   minimap.c - Gestion complète de la mini-carte                          */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../cube3d.h"
 
-void init_minimap(t_game *game)
+void    init_minimap(t_game *game)
 {
     game->minimap.size = 150;
     game->minimap.x = 20;

@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   portal_utils2.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 XX:XX:XX by tcaccava          #+#    #+#             */
-/*   Updated: 2025/05/26 XX:XX:XX by tcaccava         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../cube3d.h"
 
 void	init_adjacent_offsets(int adj_offsets[4][2])
@@ -73,7 +62,8 @@ void	init_check_offsets(int check_offsets[9][2])
 	check_offsets[8][1] = 1;
 }
 
-void	check_portal_at_offset(t_game *game, int player_x, int player_y, int offset[2])
+void	check_portal_at_offset(t_game *game, int player_x, int player_y,
+			int offset[2])
 {
 	int		check_x;
 	int		check_y;
@@ -89,18 +79,8 @@ void	check_portal_at_offset(t_game *game, int player_x, int player_y, int offset
 		return ;
 	portal_center_x = (check_x * TILE_SIZE) + (TILE_SIZE / 2);
 	portal_center_y = (check_y * TILE_SIZE) + (TILE_SIZE / 2);
-	distance = calculate_distance_to_portal(game, portal_center_x, portal_center_y);
+	distance = calculate_distance_to_portal(game, portal_center_x,
+			portal_center_y);
 	if (distance < 40.0)
 		teleport_through_portal(game, check_x, check_y);
-}
-double	calculate_distance_to_portal(t_game *game, double portal_x, double portal_y)
-{
-	double	dx;
-	double	dy;
-	double	distance;
-
-	dx = game->player.x - portal_x;
-	dy = game->player.y - portal_y;
-	distance = sqrt(dx * dx + dy * dy);
-	return (distance);
 }

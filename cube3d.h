@@ -63,6 +63,15 @@
 # define ANIMATION_SPEED 6
 
 // ========== STRUCTURES ==========
+
+typedef struct s_heal_coords
+{
+	int	x;
+	int	y;
+	int	px;
+	int	py;
+}	t_heal_coords;
+
 typedef struct s_game	t_game;
 
 
@@ -975,5 +984,7 @@ void					update_player_position(t_player *player);
 int						validate_player_game(t_player *player);
 int						can_move_to_position(t_game *game, float x, float y);
 void					apply_movement_bounds(t_player *player, float *new_x, float *new_y);
+
+void					init_laser_positions(int *positions, int center_y);
 
 #endif

@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 int	load_healgun(t_game *game)
@@ -28,8 +27,8 @@ void	init_healgun_sprite_paths(const char *sprites[5])
 
 int	load_healgun_frame(t_game *game, int frame, const char *path)
 {
-	if (!load_single_weapon_texture(game->mlx, &game->healgun_frames[frame], 
-									(char *)path))
+	if (!load_single_weapon_texture(game->mlx, &game->healgun_frames[frame],
+			(char *)path))
 	{
 		printf("Erreur: %s non trouvé\n", path);
 		return (0);

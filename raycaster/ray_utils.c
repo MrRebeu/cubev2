@@ -32,7 +32,8 @@ void	store_ray_info(t_game *game, int column_x, double distance,
 	game->rays[column_x].hit_type = hit_type;
 }
 
-double	no_fish_eye(double min_distance, double radiant_angle, double player_angle)
+double	no_fish_eye(double min_distance, double radiant_angle,
+		double player_angle)
 {
 	double	angle_diff;
 	double	corrected_dist;
