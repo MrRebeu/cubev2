@@ -327,8 +327,6 @@ typedef struct s_game
 	int					num_weapon_pickup;
 	t_open_door			*open_doors;
     int					num_open_doors;
-	t_laser *lasers;
-    int num_lasers;
 	t_img healgun_frames[5];       // Tableau des sprites d'animation
 }						t_game;
 
@@ -440,11 +438,8 @@ int						set_map_dimensions(t_game *game, int line_count);
 int						read_map(char *file_path, t_game *game);
 
 // map/map_validator.c
-int						check_borders(t_map *map);
 int						is_valid_playable_char(char c);
 int						check_surrounding_spaces(t_map *map, int x, int y);
-int						check_playable_spaces(t_map *map);
-int						validate_map(t_map *map);
 
 // map/player_spawn.c
 int						is_player_spawn(char c);
@@ -641,8 +636,6 @@ void draw_open_door_sprite(t_game *game, t_img *sprite, t_point pos, int size);
 void render_all_open_doors(t_game *game);
 void render_door_columns(t_game *game, t_open_door *door, int col_start, int col_end, 
                         int door_top, int door_bottom, double distance);
-int calculate_opening_width(t_game *game, int start_x, int start_y, int orientation, 
-                           double *width, double *center_x, double *center_y);
 int world_to_screen_column(t_game *game, double world_x, double world_y);
 // Dans la section render functions
 void render_open_door_as_sprite(t_game *game, t_open_door *door);

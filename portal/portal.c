@@ -1,26 +1,6 @@
 #include "../cube3d.h"
 
-int get_portal_orientation(t_game *game, int portal_x, int portal_y)
-{
-    int north_blocked;
-    int east_blocked;
-    int south_blocked;
-    int west_blocked;
-    
-    // Vérifier quels côtés sont bloqués par des murs
-    north_blocked = (portal_y - 1 < 0) || (game->map.matrix[portal_y - 1][portal_x] == '1');
-    east_blocked = (portal_x + 1 >= game->map.width) || (game->map.matrix[portal_y][portal_x + 1] == '1');
-    south_blocked = (portal_y + 1 >= game->map.height) || (game->map.matrix[portal_y + 1][portal_x] == '1');
-    west_blocked = (portal_x - 1 < 0) || (game->map.matrix[portal_y][portal_x - 1] == '1');
-    
-    // Le portail "regarde" vers le côté libre
-    if (!north_blocked) return 0; // Face Nord
-    if (!east_blocked)  return 1; // Face Est  
-    if (!south_blocked) return 2; // Face Sud
-    if (!west_blocked)  return 3; // Face Ouest
-    
-    return 0; // Par défaut
-}
+
 
 void remove_all_portals(t_game *game)
 {
