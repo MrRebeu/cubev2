@@ -216,13 +216,13 @@ int	is_not_wall_for_movement(t_map *map, double x, double y)
 	// ✅ Pour le mouvement : le joueur peut passer dans les portes ouvertes
 	if (map->matrix[map_y][map_x] == '1' || map->matrix[map_y][map_x] == 'D'
 		|| map->matrix[map_y][map_x] == 'P' || map->matrix[map_y][map_x] == 'i'
-		|| map->matrix[map_y][map_x] == 'd' || map->matrix[map_y][map_x] == 'M')
+		|| map->matrix[map_y][map_x] == 'd' || map->matrix[map_y][map_x] == 'M'
+		|| map->matrix[map_y][map_x] == 'L')
 		return (0);
 	
 	// ✅ 'O' (porte ouverte) = le joueur PEUT passer
 	return (1);
 }
-
 int is_not_wall(t_map *map, double x, double y)
 {
     int map_x = (int)(x / TILE_SIZE);
@@ -233,8 +233,25 @@ int is_not_wall(t_map *map, double x, double y)
     
     char cell = map->matrix[map_y][map_x];
     
-    // ✅ Pour le raycasting : 'D' est un mur solide (la porte est fermée)
-    if (cell == '1' || cell == 'D' || cell == 'P' || cell == 'i' || cell == 'd' || cell == 'M')
+    // ✅ LASER = TRANSPARENT TOTAL (pas de montants)
+    if (cell == 'L')
+        return (1); // ← Les rayons traversent complètement
+    
+    // ✅ PORTES OUVERTES = avec montants sur les bords
+    if (cell == 'O' || cell == 'o')
+    {
+        double cell_x = fmod(x, TILE_SIZE);
+        double frame_width = TILE_SIZE * 0.15;
+        
+        // ✅ Si on est dans la zone centrale, c'est libre
+        if (cell_x > frame_width && cell_x < TILE_SIZE - frame_width)
+            return (1); // Passage libre
+        else
+            return (0); // Montant solide
+    }
+    
+    // ✅ Murs solides
+    if (cell == '1' || cell == 'D' || cell == 'P' || cell == 'i' || cell == 'd' || cell == 'M') 
         return (0);
     else
         return (1);
@@ -377,161 +394,6 @@ void check_open_doors_on_ray(t_game *game, int column_x, double radiant_angle)
     }
 }
 
-void render_transparent_door(t_game *game, int column_x, t_ray *ray)
-{
-    printf("🚪 render_transparent_door() - Column %d appelée !\n", column_x);
-    
-    t_render renderer;
-    
-    // ✅ Calculer la hauteur basée sur la distance à la PORTE
-    renderer.corrected_dist = no_fish_eye(ray->door_distance, ray->radiant_angle, ray->player_angle);
-    renderer.wall_height = calc_wall_height(renderer.corrected_dist);
-    
-    renderer.draw_start = (DISPLAY_HEIGHT / 2) - (renderer.wall_height / 2) + game->pitch;
-    renderer.draw_end = (DISPLAY_HEIGHT / 2) + (renderer.wall_height / 2) + game->pitch;
-    
-    if (renderer.draw_start < 0) renderer.draw_start = 0;
-    if (renderer.draw_end >= DISPLAY_HEIGHT) renderer.draw_end = DISPLAY_HEIGHT - 1;
-    
-    // ✅ DEBUG : Vérifier la texture et orientation
-    printf("🎨 Texture ptr: %p\n", game->map.open_door_texture.ptr);
-    printf("🎨 Door orientation: %d (0=horizontal, 1=vertical)\n", ray->door_orientation);
-    
-    // ✅ Calcul tex_x selon l'orientation RÉELLE de la porte
-    if (ray->door_orientation == 0) // Porte HORIZONTALE (passage N-S)
-    {
-        // Pour une porte horizontale, utiliser la coordonnée X
-        renderer.tex_x = (int)(ray->door_hit_x) % TILE_SIZE;
-        if (sin(ray->radiant_angle) < 0)
-            renderer.tex_x = TILE_SIZE - renderer.tex_x - 1;
-    }
-    else // Porte VERTICALE (passage E-W)
-    {
-        // Pour une porte verticale, utiliser la coordonnée Y
-        renderer.tex_x = (int)(ray->door_hit_y) % TILE_SIZE;
-        if (cos(ray->radiant_angle) > 0)
-            renderer.tex_x = TILE_SIZE - renderer.tex_x - 1;
-    }
-
-    // ✅ DEBUG : Afficher les coordonnées calculées
-    printf("🎨 tex_x = %d (door_hit_x=%.1f, door_hit_y=%.1f)\n", 
-           renderer.tex_x, ray->door_hit_x, ray->door_hit_y);
-
-    // ✅ Rendu avec debug des couleurs
-    int CY = (DISPLAY_HEIGHT / 2) + game->pitch;
-    double H = renderer.wall_height;
-    int pixel_count = 0; // Compteur de debug
-    
-    renderer.y = renderer.draw_start;
-    while (renderer.y <= renderer.draw_end)
-    {
-        if (renderer.y >= 0 && renderer.y < DISPLAY_HEIGHT)
-        {
-            float rel = ((renderer.y - CY) / H) + 0.5f;
-            int texture_y = (int)(rel * TILE_SIZE);
-            if (texture_y < 0) texture_y = 0;
-            else if (texture_y >= TILE_SIZE) texture_y = TILE_SIZE - 1;
-
-            // ✅ DEBUG : Afficher tex_y pour les premiers pixels
-            pixel_count++;
-            if (pixel_count <= 3) {
-                printf("🎨 tex_y = %d (rel=%.2f, H=%.1f)\n", texture_y, rel, H);
-            }
-
-            // ✅ Récupérer la vraie couleur de la texture
-            renderer.tex_addr = game->map.open_door_texture.addr
-                + (texture_y * game->map.open_door_texture.line_length
-                + renderer.tex_x * (game->map.open_door_texture.bits_per_pixel / 8));
-            renderer.color = *(unsigned int *)renderer.tex_addr;
-
-            int red = (renderer.color >> 16) & 0xFF;
-            int green = (renderer.color >> 8) & 0xFF;
-            int blue = renderer.color & 0xFF;
-            
-            // ✅ DEBUG : Afficher les vraies couleurs
-            if (pixel_count <= 10) {
-                printf("🎨 REAL texture pixel %d: color=0x%X, red=%d, green=%d, blue=%d\n", 
-                       pixel_count, renderer.color, red, green, blue);
-            }
-            
-            // ✅ TRANSPARENCE : Skip les pixels rouges
-            if (!(red >= 200 && green <= 50 && blue <= 50))
-            {
-                if (pixel_count <= 10) {
-                    printf("🎨 → Pixel DESSINÉ\n");
-                }
-                renderer.screen_pixel = game->screen.addr
-                    + (renderer.y * game->screen.line_length
-                    + column_x * (game->screen.bits_per_pixel / 8));
-                *(unsigned int *)renderer.screen_pixel = renderer.color;
-            }
-            else
-            {
-                if (pixel_count <= 10) {
-                    printf("🎨 → Pixel TRANSPARENT (rouge)\n");
-                }
-            }
-        }
-        renderer.y++;
-    }
-    printf("🎨 Total pixels processed: %d\n", pixel_count);
-}
-
-int get_door_orientation(t_map *map, int door_x, int door_y)
-{
-    if (!map || !map->matrix)
-        return 1;
-    
-    if (door_x < 0 || door_x >= map->width || door_y < 0 || door_y >= map->height)
-        return 1;
-    
-    char north = '1';
-    char south = '1';
-    char west = '1';
-    char east = '1';
-    
-    if (door_y > 0)
-        north = map->matrix[door_y - 1][door_x];
-    if (door_y < map->height - 1)
-        south = map->matrix[door_y + 1][door_x];
-    if (door_x > 0)
-        west = map->matrix[door_y][door_x - 1];
-    if (door_x < map->width - 1)
-        east = map->matrix[door_y][door_x + 1];
-    
-    printf("🔍 Door at [%d,%d]: N='%c' S='%c' W='%c' E='%c'\n", 
-           door_x, door_y, north, south, west, east);
-    
-    // ✅ NOUVELLE LOGIQUE : Chercher les espaces libres !
-    
-    // Si espaces libres au NORD ET SUD → passage Nord-Sud → porte HORIZONTALE
-    if ((north == '0' || north == 'R' || north == 'G') && 
-        (south == '0' || south == 'R' || south == 'G')) {
-        printf("🔍 → Detected HORIZONTAL door (passage N-S)\n");
-        return 0; // Horizontale
-    }
-    
-    // Si espaces libres à l'EST ET OUEST → passage Est-Ouest → porte VERTICALE  
-    if ((west == '0' || west == 'R' || west == 'G') && 
-        (east == '0' || east == 'R' || east == 'G')) {
-        printf("🔍 → Detected VERTICAL door (passage E-W)\n");
-        return 1; // Verticale
-    }
-    
-    // ✅ CAS MIXTE : Si un côté a un espace libre, orienter selon ça
-    if (north == '0' || south == '0') {
-        printf("🔍 → Detected HORIZONTAL door (mixed case N-S)\n");
-        return 0;
-    }
-    
-    if (west == '0' || east == '0') {
-        printf("🔍 → Detected VERTICAL door (mixed case E-W)\n");
-        return 1;
-    }
-    
-    printf("🔍 → Default to HORIZONTAL\n");
-    return 0; // Par défaut horizontal
-}
 double ray_casting(t_game *game, double radiant_angle, int column_x)
 {
     t_intersect v;
@@ -542,119 +404,44 @@ double ray_casting(t_game *game, double radiant_angle, int column_x)
     double dist_v, dist_h;
     char hit_type_v, hit_type_h;
 
-    // ✅ Initialiser les champs de porte transparente
-    game->rays[column_x].has_transparent_door = 0;
-    game->rays[column_x].door_distance = 0;
-    game->rays[column_x].door_hit_x = 0;
-    game->rays[column_x].door_hit_y = 0;
-    game->rays[column_x].door_hit_vertical = 0;
-    game->rays[column_x].door_orientation = 0;
-
     radiant_angle = normalize_angle(radiant_angle);
     v = v_intersection(game->player.x, game->player.y, radiant_angle);
     h = h_intersection(game->player.x, game->player.y, radiant_angle);
 
-    // ✅ Raycasting vertical avec détection de portes
+    // ✅ FONCTION POUR AJUSTER LA POSITION DES MURS TYPE 'D'
+    
+
+    // Raycasting vertical
     iter = 0;
     while (iter < max_iterations)
     {
-        char current_cell = get_hit_type(&game->map, v.x, v.y);
-        
-        // ✅ Si on trouve une porte 'O' et qu'on n'en a pas encore mémorisé
-        if (current_cell == 'O' && game->rays[column_x].has_transparent_door == 0)
-        {
-            printf("🚪 TROUVÉ PORTE 'O' VERTICAL ! Column: %d\n", column_x);
-            
-            int door_map_x = (int)(v.x / TILE_SIZE);
-            int door_map_y = (int)(v.y / TILE_SIZE);
-            
-            // ✅ DEBUG : Vérifier les coordonnées AVANT de les stocker
-            printf("🔍 v.x=%.1f, v.y=%.1f → map[%d,%d]\n", v.x, v.y, door_map_x, door_map_y);
-            
-            if (door_map_x >= 0 && door_map_x < game->map.width && 
-                door_map_y >= 0 && door_map_y < game->map.height)
-            {
-                printf("🔍 Cellule à cette position: '%c'\n", game->map.matrix[door_map_y][door_map_x]);
-                
-                game->rays[column_x].has_transparent_door = 1;
-                game->rays[column_x].door_distance = sqrt(pow(v.x - game->player.x, 2) + pow(v.y - game->player.y, 2));
-                game->rays[column_x].door_hit_x = v.x;
-                game->rays[column_x].door_hit_y = v.y;
-                game->rays[column_x].door_hit_vertical = 1;
-                game->rays[column_x].door_orientation = get_door_orientation(&game->map, door_map_x, door_map_y);
-                
-                printf("🔍 Coordonnées stockées: hit_x=%.1f, hit_y=%.1f\n", v.x, v.y);
-                printf("✅ has_transparent_door défini à 1 pour column %d\n", column_x);
-            }
-        }
-        
-        // ✅ Si on trouve un mur solide, on s'arrête
         if (!is_not_wall(&game->map, v.x, v.y))
             break;
-            
         v.x += v.step_x;
         v.y += v.step_y;
         iter++;
     }
 
-    // ✅ Raycasting horizontal avec détection de portes
+    // Raycasting horizontal
     iter = 0;
     while (iter < max_iterations)
     {
-        char current_cell = get_hit_type(&game->map, h.x, h.y);
-        
-        // ✅ Si on trouve une porte 'O' et qu'on n'en a pas encore de plus proche
-        if (current_cell == 'O')
-        {
-            printf("🚪 TROUVÉ PORTE 'O' HORIZONTAL ! Column: %d\n", column_x);
-            
-            double door_dist_h = sqrt(pow(h.x - game->player.x, 2) + pow(h.y - game->player.y, 2));
-            
-            int door_map_x = (int)(h.x / TILE_SIZE);
-            int door_map_y = (int)(h.y / TILE_SIZE);
-            
-            // ✅ DEBUG : Vérifier les coordonnées AVANT de les stocker
-            printf("🔍 h.x=%.1f, h.y=%.1f → map[%d,%d]\n", h.x, h.y, door_map_x, door_map_y);
-            
-            if (door_map_x >= 0 && door_map_x < game->map.width && 
-                door_map_y >= 0 && door_map_y < game->map.height)
-            {
-                printf("🔍 Cellule à cette position: '%c'\n", game->map.matrix[door_map_y][door_map_x]);
-                
-                if (game->rays[column_x].has_transparent_door == 0 || door_dist_h < game->rays[column_x].door_distance)
-                {
-                    game->rays[column_x].has_transparent_door = 1;
-                    game->rays[column_x].door_distance = door_dist_h;
-                    game->rays[column_x].door_hit_x = h.x;
-                    game->rays[column_x].door_hit_y = h.y;
-                    game->rays[column_x].door_hit_vertical = 0;
-                    game->rays[column_x].door_orientation = get_door_orientation(&game->map, door_map_x, door_map_y);
-                    
-                    printf("🔍 Coordonnées stockées: hit_x=%.1f, hit_y=%.1f\n", h.x, h.y);
-                    printf("✅ has_transparent_door défini à 1 pour column %d\n", column_x);
-                }
-            }
-        }
-        
         if (!is_not_wall(&game->map, h.x, h.y))
             break;
-            
         h.x += h.step_x;
         h.y += h.step_y;
         iter++;
     }
 
-    // ✅ Reste du code identique (choix vertical vs horizontal)
+    // ✅ AJUSTER LES POSITIONS POUR LES MURS TYPE 'D'
     hit_type_v = get_hit_type(&game->map, v.x, v.y);
     hit_type_h = get_hit_type(&game->map, h.x, h.y);
-    
+    // adjust_door_position(&v.x, &v.y, hit_type_v, 1); // 1 = vertical
+    // adjust_door_position(&h.x, &h.y, hit_type_h, 0); // 0 = horizontal
+
+    // Recalculer les distances après ajustement
     dist_v = sqrt(pow(v.x - game->player.x, 2) + pow(v.y - game->player.y, 2));
     dist_h = sqrt(pow(h.x - game->player.x, 2) + pow(h.y - game->player.y, 2));
-
-    // ✅ À la fin, vérifier si has_transparent_door est toujours défini
-    // if (game->rays[column_x].has_transparent_door == 1) {
-    //     printf("🔍 FIN raycasting - Column %d: has_transparent_door=1 ✅\n", column_x);
-    // }
 
     if (fabs(dist_v - dist_h) < epsilon)
     {

@@ -43,14 +43,14 @@ int	init_map_and_player(t_game *game, char *map_file)
 	return (1);
 }
 
-void init_portals(t_game *game)
-{
-    game->portal_1.is_active = 0;
-    game->portal_1.orientation = 0;
-    game->portal_2.is_active = 0;
-    game->portal_2.orientation = 0;
-    game->portal_count = 0;
-}
+// void init_portals(t_game *game)
+// {
+//     game->portal_1.is_active = 0;
+//     game->portal_1.orientation = 0;
+//     game->portal_2.is_active = 0;
+//     game->portal_2.orientation = 0;
+//     game->portal_count = 0;
+// }
 
 void	init_ui_components(t_game *game)
 {
@@ -79,8 +79,8 @@ int set_open_door_positions(t_game *game)
                 game->open_doors[door_index].y = (y * TILE_SIZE) + (TILE_SIZE / 2);
                 game->open_doors[door_index].active = 1;
                 
-              //  printf("🚪 Porte ouverte initialisée à [%d,%d] -> (%.1f, %.1f)\n", 
-             //          x, y, game->open_doors[door_index].x, game->open_doors[door_index].y);
+                printf("🚪 Porte ouverte initialisée à [%d,%d] -> (%.1f, %.1f)\n", 
+                       x, y, game->open_doors[door_index].x, game->open_doors[door_index].y);
                 
                 door_index++;
             }

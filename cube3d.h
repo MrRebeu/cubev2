@@ -34,13 +34,15 @@
 # define R 114
 # define Q 113
 # define E 101
+# define ESPACE 32
+# define F 102
 # define LEFT 65508
 # define RIGHT 65363
 
 #define HANDS 0
 #define PORTALGUN 1  // G dans la carte
 #define RAYGUN 2     // R dans la carte
-#define HEALGUN 3
+#define HEALGUN 3 // H sur la carte 
 #define MAX_WEAPONS 4
 
 # define TILE_SIZE 64
@@ -62,6 +64,15 @@
 
 // ========== STRUCTURES ==========
 typedef struct s_game	t_game;
+
+
+typedef struct s_laser
+{
+    double x;
+    double y;
+    int active;
+    double distance_to_player;
+} t_laser;
 
 typedef struct s_enemy_animation
 {
@@ -216,6 +227,14 @@ typedef struct s_player
 	double				plane_y;
 	t_weapon_state		weapon;
 	bool				has_weapon[MAX_WEAPONS];
+	int					healgun_ammo;    
+	int healgun_heal_applied;    // Nombre de munitions
+    int healgun_is_loaded;   // 1 si chargé, 0 si vide
+	int healgun_anim_state;     // 0-4 (frame actuelle)
+    int healgun_anim_timer;     // Timer pour chaque frame
+    int healgun_animating;      // 1 si en cours d'animation
+    int healgun_frame_duration;
+	int healgun_anim_frame; // Frame actuelle de l'animation
 }						t_player;
 
 typedef struct s_intersect
@@ -258,6 +277,7 @@ typedef struct s_map
 	t_img				wall_shooted_texture;
 	t_img				door_texture;
 	t_img				open_door_texture;
+	t_img				open_door_shooted_texture;
 	t_img				door_shooted_texture;
 	t_img				wall_portal_texture;
 	t_img				arm_1;
@@ -282,12 +302,6 @@ typedef struct s_ray
 	char				hit_type;
 	int					hit_enemy_idx;
 	int					skip_wall;
-	int					has_transparent_door;  // 0 ou 1
-	double				door_distance;         // Distance à la porte 'O'
-	double				door_hit_x;           // Position de la porte
-	double				door_hit_y;
-	int					door_hit_vertical;
-	int					door_orientation;
 }						t_ray;
 
 typedef struct s_game
@@ -313,6 +327,9 @@ typedef struct s_game
 	int					num_weapon_pickup;
 	t_open_door			*open_doors;
     int					num_open_doors;
+	t_laser *lasers;
+    int num_lasers;
+	t_img healgun_frames[5];       // Tableau des sprites d'animation
 }						t_game;
 
 typedef struct s_render
@@ -379,7 +396,7 @@ int						loop_game(t_game *game);
 // core/game_init.c
 int						init_mlx_window(t_game *game);
 int						init_map_and_player(t_game *game, char *map_file);
-void					init_portals(t_game *game);
+//void					init_portals(t_game *game);
 void					init_ui_components(t_game *game);
 int						init_game(t_game *game, char *map_file);
 
@@ -392,11 +409,11 @@ int						load_directional_textures(t_game *game,
 int						load_all_textures(t_game *game);
 
 // core/weapon_loader.c
-int						load_weapon_textures(void *mlx,
-							t_img weapon_textures[3], int weapon_type);
-int						load_raygun(t_game *game);
-int						load_portalgun(t_game *game);
-int						load_all_weapons(t_game *game);
+//int						load_weapon_textures(void *mlx,
+//							t_img weapon_textures[3], int weapon_type);
+// int						load_raygun(t_game *game);
+// int						load_portalgun(t_game *game);
+// int						load_all_weapons(t_game *game);
 int						init_game_with_4_textures(t_game *game, char *map_file,
 							t_texture_paths *paths);
 // core/enemy_init.c
@@ -590,9 +607,9 @@ int						mouse_button(int button, int x, int y, t_game *game);
 
 // ========== PORTAL FUNCTIONS ==========
 // portal/portal.c
-void					remove_all_portals(t_game *game);
-void					check_portal_teleportation(t_game *game);
-void					teleport_through_portal(t_game *game, int portal_x, int portal_y);
+//void					remove_all_portals(t_game *game);
+//void					check_portal_teleportation(t_game *game);
+//void					teleport_through_portal(t_game *game, int portal_x, int portal_y);
 
 
 
@@ -611,10 +628,10 @@ void calculate_weapon_screen_pos(t_game *game, t_render *render);
 void draw_weapon_pickup_sprite(t_game *game, t_img *sprite, t_point pos, int size);
 
 // core/weapon_loader.c
-int load_weapon_pickup_sprite(t_game *game, t_weapon_pickup *pickup, char *path);
+//int load_weapon_pickup_sprite(t_game *game, t_weapon_pickup *pickup, char *path);
 int count_weapons_in_map(t_game *game);
 int set_weapon_positions(t_game *game);
-int load_weapon_pickup_sprites(t_game *game);
+//int load_weapon_pickup_sprites(t_game *game);
 void disable_weapon_pickup_at_position(t_game *game, int map_x, int map_y, int weapon_type);
 int	is_not_wall_for_movement(t_map *map, double x, double y);
 int count_open_doors_in_map(t_game *game);
@@ -645,7 +662,180 @@ void render_open_door_ultra_thin(t_game *game, int column_x, t_render *renderer,
 void render_simple_door_line(t_game *game, int column_x, t_render *renderer);
 t_open_door *find_door_at_position(t_game *game, int map_x, int map_y);
 void render_open_door(t_game *game, int column_x, t_render *renderer, t_ray *ray);
-void render_transparent_door(t_game *game, int column_x, t_ray *ray);
-int get_door_orientation(t_map *map, int door_x, int door_y);
+void open_door(t_game *game);
+void render_shooted_open_door(t_game *game, int column_x, t_render *renderer, t_ray *ray);
+
+void render_laser_overlays(t_game *game);
+void render_laser_overlay_on_column(t_game *game, int column_x);
+int count_lasers_in_map(t_game *game);
+int init_lasers(t_game *game);
+void render_laser_sprite(t_game *game, t_laser *laser);
+void draw_laser_lines(t_game *game, int start_col, int end_col, int top, int bottom, double depth);
+void render_all_lasers(t_game *game);
+int ray_crosses_laser(t_game *game, double radiant_angle);
+void draw_laser_line_on_column(t_game *game, int column);
+void use_healgun(t_game *game);
+void render_healgun_animation(t_game *game);
+void start_healgun_animation(t_game *game);
+void update_healgun_animation(t_game *game);
+int load_healgun(t_game *game);
+void use_healgun(t_game *game);
+int	load_single_weapon_texture(void *mlx, t_img *tex, char *path);
+
+
+
+// ========== HEAL FUNCTIONS ==========
+// heal/heal_system.c
+void					use_healgun(t_game *game);
+int						validate_healgun_use(t_game *game);
+void					start_heal_process(t_game *game);
+void					consume_heal_ammo(t_game *game);
+void					apply_healing(t_game *game);
+
+// heal/heal_animation.c
+void					update_healgun_animation(t_game *game);
+void					advance_heal_frame(t_game *game);
+void					set_frame_durations(int frame_durations[5]);
+void					finish_heal_animation(t_game *game);
+void					set_next_frame_timer(t_game *game, int frame_durations[5]);
+
+// heal/heal_render.c
+void					render_healgun_animation(t_game *game);
+void					draw_arm_sprite(t_game *game, t_img *sprite, int x, int y);
+void					draw_arm_row(t_game *game, t_img *sprite, int x, int y, int row);
+void					draw_arm_pixel(t_game *game, t_img *sprite, int x, int y, int px, int py);
+int						is_transparent_pixel(unsigned int color);
+
+// heal/heal_loader.c
+int						load_healgun(t_game *game);
+void					init_healgun_sprite_paths(const char *sprites[5]);
+int						load_healgun_frame(t_game *game, int frame, const char *path);
+void					check_reload_healgun(t_game *game);
+void					start_healgun_animation(t_game *game);
+
+// heal/heal_utils.c
+int						is_pixel_in_bounds(int x, int y);
+char					*get_sprite_pixel(t_img *sprite, int x, int y);
+char					*get_screen_pixel(t_game *game, int x, int y);
+void					init_healgun_animation(t_game *game);
+int						is_healgun_ready(t_game *game);
+
+// ========== PORTAL FUNCTIONS ==========
+// portal/portal_init.c
+void					init_portals(t_game *game);
+void					init_portal_one(t_game *game);
+void					init_portal_two(t_game *game);
+void					setup_portal_one(t_game *game, int map_x, int map_y, int orientation);
+void					setup_portal_two(t_game *game, int map_x, int map_y, int orientation);
+
+// portal/portal_create.c
+int						create_portal(t_game *game, int map_x, int map_y, int orientation);
+int						create_new_portal(t_game *game, int map_x, int map_y, int orientation);
+int						reset_and_create_portal(t_game *game, int map_x, int map_y, int orientation);
+void					print_portal_created(int portal_num, int x, int y, int orientation);
+void					print_portal_reset(int x, int y, int orientation);
+
+// portal/portal_teleport.c
+void					teleport_through_portal(t_game *game, int portal_x, int portal_y);
+t_portal				*get_destination_portal(t_game *game, int portal_x, int portal_y);
+void					execute_teleportation(t_game *game, t_portal *dest_portal);
+int						calculate_exit_direction(t_portal *dest_portal);
+void					emergency_teleport(t_game *game, t_portal *dest_portal);
+
+// portal/portal_utils.c
+char					*get_orientation_name(int orientation);
+int						is_valid_map_position(t_game *game, int x, int y);
+int						is_valid_teleport_position(t_game *game, int x, int y);
+void					place_player_at_position(t_game *game, int x, int y);
+int						try_teleport_at_direction(t_game *game, int dest_x, int dest_y, int dir);
+
+// portal/portal_cleanup.c
+void					remove_all_portals(t_game *game);
+void					clear_portals_from_map(t_game *game);
+void					reset_portal_states(t_game *game);
+void					recalculate_rays(t_game *game);
+void					update_ray_data(t_game *game, int i, double radiant_angle);
+
+// portal/portal_utils2.c
+void					init_adjacent_offsets(int adj_offsets[4][2]);
+void					check_portal_teleportation(t_game *game);
+void					check_nearby_portals(t_game *game, int player_x, int player_y);
+void					init_check_offsets(int check_offsets[9][2]);
+void					check_portal_at_offset(t_game *game, int player_x, int player_y, int offset[2]);
+double					calculate_distance_to_portal(t_game *game, double portal_x, double portal_y);
+
+// ========== WEAPON FUNCTIONS ==========
+// weapon/weapon_init.c
+void					init_player_weapons(t_player *player);
+void					init_weapon_inventory(t_player *player);
+void					init_weapon_state(t_player *player);
+void					init_weapon_ammo(t_player *player);
+int						load_all_weapons(t_game *game);
+
+// weapon/weapon_loader.c
+int						load_single_weapon_texture(void *mlx, t_img *tex, char *path);
+int						load_weapon_textures(void *mlx, t_img weapon_textures[3], int weapon_type);
+void					init_weapon_paths(const char paths[MAX_WEAPONS][3]);
+void					init_hands_paths(const char paths[3]);
+void					init_portalgun_paths(const char paths[3]);
+void					init_raygun_paths(const char paths[3]);
+void					init_healgun_paths(const char paths[3]);
+
+// weapon/weapon_pickup.c
+int						count_weapons_in_map(t_game *game);
+int						is_weapon_cell(char cell);
+int						load_weapon_pickup_sprites(t_game *game);
+void					init_weapon_pickup_array(t_game *game);
+int						load_weapon_pickup_sprite(t_game *game, t_weapon_pickup *pickup, char *path);
+int						set_weapon_positions(t_game *game);
+
+// weapon/weapon_shoot.c
+int						mouse_button(int button, int x, int y, t_game *game);
+void					handle_left_click(t_game *game);
+void					shoot_raygun(t_game *game);
+void					shoot_portalgun(t_game *game);
+void					shoot_healgun(t_game *game);
+void					calculate_shoot(t_game *game);
+
+// weapon/weapon_render.c
+void					render_weapon(t_game *game);
+t_img					*get_current_weapon_sprite(t_game *game);
+t_img					*get_healgun_sprite(t_game *game);
+void					calculate_weapon_position(t_game *game, t_render *renderer, t_img *weapon);
+int						is_healgun_frame_2(t_game *game);
+void					update_weapon_animation(t_game *game);
+void					draw_weapon_sprite(t_game *game, t_render *renderer, t_img *weapon);
+void					draw_weapon_row(t_game *game, t_render *renderer, t_img *weapon);
+void					draw_weapon_pixel(t_game *game, t_img *weapon, t_render *renderer, int tex_x, int tex_y);
+
+// weapon/weapon_specific.c
+int						load_hands(t_game *game);
+void					setup_hands_texture(t_game *game, int width, int height);
+int						load_raygun(t_game *game);
+int						load_portalgun(t_game *game);
+int						load_healgun(t_game *game);
+
+// weapon/weapon_pickup_render.c
+void					render_weapon_pickup(t_game *game, t_weapon_pickup *weapon);
+int						should_skip_weapon_render(t_game *game, t_weapon_pickup *weapon);
+int						setup_healgun_pickup_sprite(t_game *game, t_weapon_pickup *weapon);
+void					calculate_weapon_transform(t_game *game, t_weapon_pickup *weapon, t_render *render);
+void					calculate_weapon_screen_pos(t_game *game, t_render *render);
+void					setup_weapon_pickup_render(t_game *game, t_render *renderer);
+void					draw_weapon_pickup_sprite(t_game *game, t_img *sprite, t_point pos, int size);
+void					draw_weapon_pickup_row(t_game *game, t_img *sprite, t_point pos, int size, int i);
+void					draw_weapon_pickup_pixel(t_game *game, t_img *sprite, t_point pos, int size, int i, int j);
+int						is_pickup_pixel_transparent(unsigned int color);
+
+// weapon/weapon_utils.c
+void					handle_scroll_wheel(t_game *game, int button);
+void					switch_to_next_weapon(t_game *game);
+void					switch_to_previous_weapon(t_game *game);
+void					disable_weapon_pickup_at_position(t_game *game, int map_x, int map_y, int weapon_type);
+int						is_weapon_at_position(t_weapon_pickup *weapon, int map_x, int map_y, int weapon_type);
+void					setup_weapon_at_position(t_game *game, int x, int y, int *weapon_index);
+void					setup_raygun_pickup(t_game *game, int index);
+void					setup_portalgun_pickup(t_game *game, int index);
+void					setup_healgun_pickup_weapon(t_game *game, int index);
 
 #endif

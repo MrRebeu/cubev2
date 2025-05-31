@@ -76,6 +76,14 @@ void render_weapon(t_game *game)
                     game->player.weapon.is_firing = 0;
                 }
             }
+            if (game->player.healgun_animation && game->player.healgun_anim_timer > 0)
+            {
+                render_healgun_animation(game);
+                game->player.healgun_anim_timer--;
+                
+                if (game->player.healgun_anim_timer <= 0)
+                    game->player.healgun_animation = 0;
+            }
         }
     }
     /* Draw weapon image pixel by pixel */
@@ -296,7 +304,7 @@ void render_wall(t_game *game, int column_x, t_render *renderer, t_ray *ray)
 void render_floor(t_game *game, int column_x, t_render *renderer)
 {
     int y;
-    unsigned int floor_color = 0x444444;
+    unsigned int floor_color = 0xd8a85a;
     unsigned int ceiling_color = 0x777777;
 
     y = 0;

@@ -12,59 +12,31 @@ void render_column(t_game *game, int column_x, t_ray *ray)
     renderer.draw_start = (DISPLAY_HEIGHT / 2) - (renderer.wall_height / 2) + game->pitch;
     renderer.draw_end = (DISPLAY_HEIGHT / 2) + (renderer.wall_height / 2) + game->pitch;
     
+    renderer.texture_offset_y = 0;
+    if (renderer.wall_height > DISPLAY_HEIGHT)
+        renderer.texture_offset_y = (renderer.wall_height - DISPLAY_HEIGHT) / 2;
+    
     if (renderer.draw_start < 0)
         renderer.draw_start = 0;
     if (renderer.draw_end >= DISPLAY_HEIGHT)
         renderer.draw_end = DISPLAY_HEIGHT - 1;
     
-    static int debug_count = 0;
-    if (ray->has_transparent_door && debug_count < 5) {
-        printf("🔍 Column %d: has_transparent_door=1, hit_type='%c'\n", 
-               column_x, ray->hit_type);
-        debug_count++;
-    }
-    // if (column_x >= 1280 && column_x <= 1285) {
-    //     printf("🎨 RENDER Column %d: has_transparent_door=%d, hit_type='%c'\n", 
-    //            column_x, ray->has_transparent_door, ray->hit_type);
-    // }
-    // ✅ NOUVEAU : Gérer les portes transparentes
-    if (ray->has_transparent_door)
-    {
-        //printf("✅ TRANSPARENT DOOR PATH!\n");
-        // 1. Dessiner le mur du fond d'abord
-        if (ray->hit_type == 'P')
-            render_wall_portal(game, column_x, &renderer, ray);
-        else if (ray->hit_type == 'D')
-            render_door(game, column_x, &renderer, ray);
-        else if (ray->hit_type == 'i')
-            render_wall_shooted(game, column_x, &renderer, ray);
-        else if (ray->hit_type == 'd')
-            render_door_shooted(game, column_x, &renderer, ray);
-        else
-            render_wall(game, column_x, &renderer, ray);
-        
-        // 2. Dessiner la porte transparente par-dessus
-        render_transparent_door(game, column_x, ray);
-    }
+    if (ray->hit_type == 'P')
+        render_wall_portal(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'D')
+        render_door(game, column_x, &renderer, ray);
+    // else if (ray->hit_type == 'V') // a faire
+    //     render_door_openable(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'i')
+        render_wall_shooted(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'd')
+        render_door_shooted(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'o')
+        render_shooted_open_door(game, column_x, &renderer, ray);
+    else if (ray->hit_type == 'O')
+        render_open_door(game, column_x, &renderer, ray);
     else
-    {
-        
-        //printf("❌ NORMAL PATH - Column %d\n", column_x);
-        // ✅ Rendu normal (pas de porte transparente)
-        if (ray->hit_type == 'P')
-            render_wall_portal(game, column_x, &renderer, ray);
-        else if (ray->hit_type == 'D')
-            render_door(game, column_x, &renderer, ray);
-        else if (ray->hit_type == 'i')
-            render_wall_shooted(game, column_x, &renderer, ray);
-        else if (ray->hit_type == 'd')
-            render_door_shooted(game, column_x, &renderer, ray);
-        else if (ray->hit_type == 'O')
-            render_open_door(game, column_x, &renderer, ray);
-        else
-            render_wall(game, column_x, &renderer, ray);
-    }
-        
+        render_wall(game, column_x, &renderer, ray);
     render_floor_and_ceiling(game, column_x, &renderer);
 }
 
@@ -77,7 +49,7 @@ void render_scene(t_game *game)
         render_column(game, col, &game->rays[col]);
         col++;
     }
-    //render_all_open_doors(game);
+    render_laser_overlays(game);
 }
 
 void render_frame(t_game *game)

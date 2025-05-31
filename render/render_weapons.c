@@ -68,9 +68,45 @@ void render_weapon(t_game *game)
     if (game->map.north.ptr != NULL)
         return;
         
-    weapon = &game->weapons[game->current_weapon][game->player.weapon.frame];
+    if (game->current_weapon == HEALGUN)
+    {
+        if (game->player.healgun_animating)
+        {
+            weapon = &game->healgun_frames[game->player.healgun_anim_frame];
+            printf("🎬 Rendu frame %d\n", game->player.healgun_anim_frame);
+        }
+        else
+        {
+            if (game->player.healgun_ammo > 0)
+            {
+                weapon = &game->healgun_frames[0]; // healgun.xpm (chargé)
+            }
+            else
+            {
+                weapon = &game->healgun_frames[4]; // healgun_4.xpm (vide)
+            }
+        }
+    }
+    else
+    {
+        weapon = &game->weapons[game->current_weapon][game->player.weapon.frame];
+    }
+    
     renderer.x = (DISPLAY_WIDTH - weapon->width) + 180;
-    renderer.y = (DISPLAY_HEIGHT - weapon->height) + 250 + game->pitch;
+    
+    // ✅ POSITION Y SPÉCIALE POUR healgun_2
+    if (game->current_weapon == HEALGUN && game->player.healgun_animating && 
+        game->player.healgun_anim_frame == 2)
+    {
+        renderer.x = (DISPLAY_WIDTH - weapon->width) + 100;
+
+        renderer.y = (DISPLAY_HEIGHT - weapon->height) + 250 + game->pitch + 600; // ← +50 pixels plus bas
+        printf("📍 healgun_2 affiché plus bas\n");
+    }
+    else
+    {
+        renderer.y = (DISPLAY_HEIGHT - weapon->height) + 250 + game->pitch; // Position normale
+    }
     
     update_weapon_animation(game);
     
