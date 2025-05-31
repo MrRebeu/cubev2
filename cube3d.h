@@ -831,4 +831,40 @@ void					setup_raygun_pickup(t_game *game, int index);
 void					setup_portalgun_pickup(t_game *game, int index);
 void					setup_healgun_pickup_weapon(t_game *game, int index);
 
+// ========== DOOR FUNCTIONS ==========
+// door/door_core.c
+void	open_door(t_game *game);
+void	calculate_door_check_position(t_game *game, double *check_x, double *check_y);
+int		is_valid_door_position(t_game *game, int map_x, int map_y);
+void	toggle_door_state(t_game *game, int map_x, int map_y, char cell);
+t_open_door	*find_door_at_position(t_game *game, int map_x, int map_y);
+
+// door/door_render.c  
+void	render_door(t_game *game, int column_x, t_render *renderer, t_ray *ray);
+void	render_open_door(t_game *game, int column_x, t_render *renderer, t_ray *ray);
+void	calculate_door_texture_coordinates(t_render *renderer, t_ray *ray);
+double	get_position_in_cell(t_ray *ray);
+int		is_door_frame_position(double pos_in_cell);
+
+// door/door_textures.c
+int		load_door_textures(t_game *game);
+int		load_closed_door_texture(t_game *game);
+int		load_open_door_texture(t_game *game);
+int		load_shot_door_textures(t_game *game);
+void	setup_texture_data(t_img *texture, int width, int height);
+
+// door/door_sprites.c
+int		load_open_door_sprites(t_game *game);
+void	init_open_door_array(t_game *game);
+int		count_open_doors_in_map(t_game *game);
+int		load_all_door_sprites(t_game *game);
+int		set_open_door_positions(t_game *game);
+
+// door/door_utils.c
+void	render_door_column(t_game *game, int column_x, t_render *renderer);
+int		calculate_texture_y(t_render *renderer, int cy, double h);
+void	render_door_pixel(t_game *game, int column_x, t_render *renderer, int texture_y);
+void	setup_door_at_position(t_game *game, int x, int y, int *door_index);
+int		load_single_door_sprite(t_game *game, int index);
+
 #endif
