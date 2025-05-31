@@ -595,17 +595,43 @@ void					draw_sprite_pixel(t_game *game, t_img *sprite,
 							t_point pos, int size, t_enemy *enemy, int i,
 							int j);
 
-// ========== WEAPON FUNCTIONS ==========
-// shoot/shoot.c
+// ========== SHOOT FUNCTIONS ==========
+// shoot/shoot_core.c
 void					calculate_shoot(t_game *game);
 int						mouse_button(int button, int x, int y, t_game *game);
+void					handle_left_click(t_game *game);
+void					handle_scroll_wheel(t_game *game, int button);
 
-// ========== PORTAL FUNCTIONS ==========
-// portal/portal.c
-//void					remove_all_portals(t_game *game);
-//void					check_portal_teleportation(t_game *game);
-//void					teleport_through_portal(t_game *game, int portal_x, int portal_y);
+// shoot/shoot_portal.c
+void					handle_portal_shot(t_game *game, t_ray *center_ray);
+int						calculate_portal_orientation(t_ray *center_ray);
+void					create_portal_at_position(t_game *game, int map_x, int map_y, int orientation);
+void					shoot_portalgun(t_game *game);
 
+// shoot/shoot_raygun.c
+void					handle_raygun_shot(t_game *game, t_ray *center_ray);
+int						check_enemy_hit(t_game *game, t_ray *center_ray);
+void					shoot_raygun(t_game *game);
+void					start_raygun_animation(t_game *game);
+
+// shoot/shoot_healgun.c
+void					shoot_healgun(t_game *game);
+int						validate_healgun_shot(t_game *game);
+void					execute_healgun_shot(t_game *game);
+void					handle_healgun_shot(t_game *game, t_ray *center_ray);
+
+// shoot/shoot_utils.c
+int						is_enemy_in_line_of_fire(t_game *game, t_enemy *enemy, double player_x, double player_y, double ray_dir_x, double ray_dir_y, t_ray *center_ray);
+int						damage_enemy(t_enemy *enemy, t_game *game);
+void					apply_wall_damage(t_game *game, t_ray *center_ray);
+void					apply_damage_to_surface(t_game *game, char hit_type, int map_x, int map_y);
+
+// shoot/shoot_portal_utils.c
+void					create_new_portal_at_position(t_game *game, int map_x, int map_y, int orientation);
+void					reset_and_create_portal_at_position(t_game *game, int map_x, int map_y, int orientation);
+void					setup_portal_data(t_game *game, int map_x, int map_y, int orientation);
+void					print_portal_creation(int portal_count, int map_x, int map_y, int orientation);
+void					print_portal_reset(int map_x, int map_y, int orientation);
 
 
 // ========== GNL FUNCTIONS ==========
