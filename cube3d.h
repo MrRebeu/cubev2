@@ -867,4 +867,8 @@ void	render_door_pixel(t_game *game, int column_x, t_render *renderer, int textu
 void	setup_door_at_position(t_game *game, int x, int y, int *door_index);
 int		load_single_door_sprite(t_game *game, int index);
 
+// door/door_textures_2.c
+int		load_door_shooted_texture(t_game *game);
+int		load_open_door_shooted_texture(t_game *game);
+
 #endif

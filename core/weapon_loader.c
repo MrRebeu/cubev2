@@ -200,68 +200,6 @@ void disable_weapon_pickup_at_position(t_game *game, int map_x, int map_y, int w
 	printf("❌ Arme non trouvée: type=%d à [%d,%d]\n", weapon_type, map_x, map_y);
 }
 
-int count_open_doors_in_map(t_game *game)
-{
-    int count = 0;
-    int y = 0;
-    int x;
-    
-    while (y < game->map.height)
-    {
-        x = 0;
-        while (x < game->map.width)
-        {
-            if (game->map.matrix[y][x] == 'O')
-                count++;
-            x++;
-        }
-        y++;
-    }
-    return count;
-}
-
-int load_open_door_sprites(t_game *game)
-{
-    int width, height;
-    
-    game->num_open_doors = count_open_doors_in_map(game);
-    
-    if (game->num_open_doors == 0)
-    {
-        game->open_doors = NULL;
-        return (1);
-    }
-    
-    game->open_doors = malloc(sizeof(t_open_door) * game->num_open_doors);
-    if (!game->open_doors)
-        return (0);
-    
-    // Charger le sprite de porte ouverte
-    int i = 0;
-    while (i < game->num_open_doors)
-    {
-        game->open_doors[i].sprite.ptr = mlx_xpm_file_to_image(game->mlx, 
-            "./texture/door_open.xpm", &width, &height);
-        if (!game->open_doors[i].sprite.ptr)
-        {
-            printf("Erreur: door_open.xpm non trouvé\n");
-            return (0);
-        }
-        
-        game->open_doors[i].sprite.width = width;
-        game->open_doors[i].sprite.height = height;
-        game->open_doors[i].sprite.addr = mlx_get_data_addr(game->open_doors[i].sprite.ptr,
-            &game->open_doors[i].sprite.bits_per_pixel,
-            &game->open_doors[i].sprite.line_length,
-            &game->open_doors[i].sprite.endian);
-        
-        game->open_doors[i].active = 0; // Sera activé par set_open_door_positions
-        i++;
-    }
-    
-    return (1);
-}
-
 int load_hands(t_game *game)
 {
     int width, height;

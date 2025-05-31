@@ -84,20 +84,6 @@ void render_simple_door_line(t_game *game, int column_x, t_render *renderer)
 	}
 }
 
-// Helper pour trouver la porte
-t_open_door *find_door_at_position(t_game *game, int map_x, int map_y)
-{
-	for (int i = 0; i < game->num_open_doors; i++)
-	{
-		int door_map_x = (int)(game->open_doors[i].x / TILE_SIZE);
-		int door_map_y = (int)(game->open_doors[i].y / TILE_SIZE);
-		
-		if (door_map_x == map_x && door_map_y == map_y && game->open_doors[i].active)
-			return &game->open_doors[i];
-	}
-	return NULL;
-}
-
 double check_open_door_on_ray(t_game *game, double radiant_angle)
 {
 	double ray_x = game->player.x;

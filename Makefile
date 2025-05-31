@@ -14,7 +14,7 @@ RENDER_SRC = render/render_core.c render/render_walls.c render/render_weapons.c 
 GNL_SRC = gnl/get_next_line.c gnl/get_next_line_utils.c
 SHOOT_SRC = shoot/shoot.c
 PORTAL_SRC = portal/portal_init.c portal/portal_create.c portal/portal_teleport.c portal/portal_utils.c portal/portal_cleanup.c portal/portal_utils2.c
-DOOR_SRC = door/door_core.c door/door_render.c door/door_textures.c door/door_sprites.c door/door_utils.c
+DOOR_SRC = door/door_core.c door/door_render.c door/door_textures.c door/door_textures_2.c door/door_sprites.c door/door_utils.c
 LASER_SRC = laser/laser.c
 HEAL_SRC = heal/heal_system.c heal/heal_animation.c heal/heal_render.c heal/heal_utils.c heal/heal_loader.c
 
