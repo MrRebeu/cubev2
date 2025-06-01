@@ -2,9 +2,9 @@
 
 void	render_door_column(t_game *game, int column_x, t_render *renderer)
 {
-	int	cy;
+	int		cy;
 	double	h;
-	int	texture_y;
+	int		texture_y;
 
 	cy = (DISPLAY_HEIGHT / 2) + game->pitch;
 	h = renderer->wall_height;
@@ -34,15 +34,16 @@ int	calculate_texture_y(t_render *renderer, int cy, double h)
 	return (texture_y);
 }
 
-void	render_door_pixel(t_game *game, int column_x, t_render *renderer, int texture_y)
+void	render_door_pixel(t_game *game, int column_x, t_render *renderer,
+		int texture_y)
 {
 	renderer->tex_addr = game->map.door_texture.addr
 		+ (texture_y * game->map.door_texture.line_length
-		+ renderer->tex_x * (game->map.door_texture.bits_per_pixel / 8));
+			+ renderer->tex_x * (game->map.door_texture.bits_per_pixel / 8));
 	renderer->color = *(unsigned int *)renderer->tex_addr;
 	renderer->screen_pixel = game->screen.addr
 		+ (renderer->y * game->screen.line_length
-		+ column_x * (game->screen.bits_per_pixel / 8));
+			+ column_x * (game->screen.bits_per_pixel / 8));
 	*(unsigned int *)renderer->screen_pixel = renderer->color;
 }
 
@@ -66,19 +67,4 @@ int	load_single_door_sprite(t_game *game, int index)
 		return (0);
 	setup_texture_data(&game->open_doors[index].sprite, width, height);
 	return (1);
-}
-
-void	apply_damage_effect(unsigned int color, unsigned int *damaged_color)
-{
-	int	red;
-	int	green;
-	int	blue;
-
-	red = (color >> 16) & 0xFF;
-	green = (color >> 8) & 0xFF;
-	blue = color & 0xFF;
-	red = (int)(red * 0.7);
-	green = (int)(green * 0.7);
-	blue = (int)(blue * 0.7);
-	*damaged_color = (red << 16) | (green << 8) | blue;
 }
