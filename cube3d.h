@@ -901,7 +901,6 @@ void					calculate_weapon_transform(t_game *game, t_weapon_pickup *weapon, t_ren
 void					calculate_weapon_screen_pos(t_game *game, t_render *render);
 void					setup_weapon_pickup_render(t_game *game, t_render *renderer);
 void					draw_weapon_pickup_sprite(t_game *game, t_img *sprite, t_point pos, int size);
-void					draw_weapon_pickup_row(t_game *game, t_img *sprite, t_point pos, int size, int i);
 // void					draw_weapon_pickup_pixel(t_game *game, t_img *sprite, t_point pos, int size, int i, int j);
 // int						is_pickup_pixel_transparent(unsigned int color);
 
@@ -1060,4 +1059,12 @@ void	render_shooted_door_column(t_game *game, t_render *renderer,
 			void    init_player_basics(t_player *player);
 void    init_player_weapons(t_player *player);
 void	draw_weapon_pixel_render(t_game *game, t_img *weapon, t_render *renderer);
+void	draw_weapon_pickup_row(t_game *game, t_weapon_pixel_data *data);
+void	calculate_pickup_src_coords(t_weapon_pixel_data *data, int src_coords[2]);
+unsigned int	get_pickup_pixel_color(t_img *sprite, int src_coords[2]);
+int		is_pickup_pixel_transparent(unsigned int color);
+int		is_valid_screen_coord(int coords[2]);
+void	set_pickup_pixel_color(t_game *game, int coords[2], unsigned int color);
+void	setup_weapon_pickup_render(t_game *game, t_render *renderer);
+
 #endif

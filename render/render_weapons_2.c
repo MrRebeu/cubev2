@@ -53,7 +53,7 @@ static void	render_weapon_pixels(t_game *game, t_img *weapon,
 					&& renderer->x + renderer->tex_x < DISPLAY_WIDTH)
 				{
 					draw_weapon_pixel_render(game, weapon, renderer);
-    			}
+				}
 				renderer->tex_x++;
 			}
 		}
