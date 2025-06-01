@@ -642,8 +642,6 @@ void					setup_enemy_render_params(t_game *game,
 void					render_death_animation(t_game *game, t_enemy *enemy);
 
 // enemy/enemy_sprite.c
-void					draw_enemy_sprite(t_game *game, t_img *sprite,
-							t_point pos, int size, t_enemy *enemy);
 void					draw_sprite_pixel(t_game *game, t_img *sprite,
 							t_point pos, int size, t_enemy *enemy, int i,
 							int j);
@@ -1080,5 +1078,22 @@ void    calculate_enemy_screen_pos(t_game *game, t_render *render);
 int     check_enemy_occlusion(t_game *game, t_render *render);
 void    setup_enemy_render_params(t_game *game, t_render *render);
 int	calculate_sprite_bounds(t_render *render, int *start, int *end);
+
+void	draw_enemy_sprite(t_game *game, t_img *sprite, t_point pos, int size, t_enemy *enemy);
+void	render_death_animation(t_game *game, t_enemy *enemy);
+
+// enemy/enemy_sprite_pixel.c
+void	draw_sprite_pixel_at_pos(t_game *game, t_img *sprite,
+			t_point pos, int size, int i, int j);
+
+// enemy/enemy_sprite_utils.c
+t_img	*get_death_sprite(t_enemy *enemy);
+int		setup_death_render(t_game *game, t_enemy *enemy, t_render *renderer);
+void	apply_death_modifiers(t_enemy *enemy, t_render *renderer);
+int		validate_death_render(t_render *renderer);
+void	finalize_death_render(t_game *game, t_render *renderer);
+
+// enemy/enemy_sprite_debug.c
+void	print_death_debug(t_enemy *enemy, t_render *renderer);
 
 #endif
