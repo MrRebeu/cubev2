@@ -24,7 +24,7 @@ void	render_column(t_game *game, int column_x, t_ray *ray)
 	t_render	renderer;
 
 	renderer.corrected_dist = no_fish_eye(ray->distance, ray->radiant_angle,
-		ray->player_angle);
+			ray->player_angle);
 	renderer.wall_height = calc_wall_height(renderer.corrected_dist);
 	renderer.door_height = (int)(renderer.wall_height * 1.3);
 	renderer.draw_start = (DISPLAY_HEIGHT / 2) - (renderer.wall_height / 2)

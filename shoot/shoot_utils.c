@@ -1,25 +1,41 @@
 #include "../cube3d.h"
 
-int	is_enemy_in_line_of_fire(t_game *game, t_enemy *enemy, double player_x, double player_y, double ray_dir_x, double ray_dir_y, t_ray *center_ray)
+static int	check_enemy_line_distance(t_shoot_params *params)
 {
 	double	dx_to_enemy;
 	double	dy_to_enemy;
 	double	distance_to_enemy;
 	double	dot_product;
+
+	dx_to_enemy = params->enemy->x - params->player_x;
+	dy_to_enemy = params->enemy->y - params->player_y;
+	distance_to_enemy = sqrt(dx_to_enemy * dx_to_enemy + dy_to_enemy
+			* dy_to_enemy);
+	dot_product = (dx_to_enemy * params->ray_dir_x + dy_to_enemy
+			* params->ray_dir_y) / distance_to_enemy;
+	if (dot_product <= 0.9 || distance_to_enemy >= params->center_ray->distance)
+		return (0);
+	return (1);
+}
+
+int	is_enemy_in_line_of_fire(t_game *game, t_shoot_params *params)
+{
+	double	dx_to_enemy;
+	double	dy_to_enemy;
 	double	cross_product;
 	double	distance_from_line;
-    (void)game;
-	
-	if (!enemy->active || enemy->state == DEAD)
+
+	(void)game;
+	if (!params->enemy->active || params->enemy->state == DEAD)
 		return (0);
-	dx_to_enemy = enemy->x - player_x;
-	dy_to_enemy = enemy->y - player_y;
-	distance_to_enemy = sqrt(dx_to_enemy * dx_to_enemy + dy_to_enemy * dy_to_enemy);
-	dot_product = (dx_to_enemy * ray_dir_x + dy_to_enemy * ray_dir_y) / distance_to_enemy;
-	if (dot_product <= 0.9 || distance_to_enemy >= center_ray->distance)
+	if (!check_enemy_line_distance(params))
 		return (0);
-	cross_product = fabs(dx_to_enemy * ray_dir_y - dy_to_enemy * ray_dir_x);
-	distance_from_line = cross_product / sqrt(ray_dir_x * ray_dir_x + ray_dir_y * ray_dir_y);
+	dx_to_enemy = params->enemy->x - params->player_x;
+	dy_to_enemy = params->enemy->y - params->player_y;
+	cross_product = fabs(dx_to_enemy * params->ray_dir_y - dy_to_enemy
+			* params->ray_dir_x);
+	distance_from_line = cross_product / sqrt(params->ray_dir_x
+			* params->ray_dir_x + params->ray_dir_y * params->ray_dir_y);
 	return (distance_from_line < TILE_SIZE * 0.4);
 }
 
@@ -53,7 +69,8 @@ void	apply_wall_damage(t_game *game, t_ray *center_ray)
 	apply_damage_to_surface(game, center_ray->hit_type, map_x, map_y);
 }
 
-void	apply_damage_to_surface(t_game *game, char hit_type, int map_x, int map_y)
+void	apply_damage_to_surface(t_game *game, char hit_type,
+		int map_x, int map_y)
 {
 	if (hit_type == '1')
 		game->map.matrix[map_y][map_x] = 'i';

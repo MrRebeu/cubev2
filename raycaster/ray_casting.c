@@ -34,35 +34,33 @@ static void	cast_horizontal_ray(t_intersect *h, t_map *map)
 	}
 }
 
-static double	calculate_distances_and_store(t_game *game, t_intersect *v,
-				t_intersect *h, int column_x)
+static double	handle_ray_result(t_game *game, t_intersect *v, t_intersect *h,
+		int column_x)
 {
-	double	dist_v;
-	double	dist_h;
-	double	epsilon;
-	char	hit_type_v;
-	char	hit_type_h;
+	double			dis_v;
+	double			dis_h;
+	t_ray_hit_data	hit_data;
 
-	epsilon = 0.00001;
-	hit_type_v = get_hit_type(&game->map, v->x, v->y);
-	hit_type_h = get_hit_type(&game->map, h->x, h->y);
-	dist_v = sqrt(pow(v->x - game->player.x, 2) + pow(v->y - game->player.y, 2));
-	dist_h = sqrt(pow(h->x - game->player.x, 2) + pow(h->y - game->player.y, 2));
-	if (fabs(dist_v - dist_h) < epsilon)
+	dis_v = sqrt(pow(v->x - game->player.x, 2) + pow(v->y - game->player.y, 2));
+	dis_h = sqrt(pow(h->x - game->player.x, 2) + pow(h->y - game->player.y, 2));
+	if (fabs(dis_v - dis_h) < 0.00001)
 	{
-		store_ray_info(game, column_x, dist_h, h->x, h->y, 0, hit_type_h);
-		return (dist_h);
+		hit_data = (t_ray_hit_data){dis_h, h->x, h->y, 0,
+			get_hit_type(&game->map, h->x, h->y)};
+		store_ray_info(game, column_x, &hit_data);
+		return (dis_h);
 	}
-	if (dist_v < dist_h)
+	if (dis_v < dis_h)
 	{
-		store_ray_info(game, column_x, dist_v, v->x, v->y, 1, hit_type_v);
-		return (dist_v);
+		hit_data = (t_ray_hit_data){dis_v, v->x, v->y, 1,
+			get_hit_type(&game->map, v->x, v->y)};
+		store_ray_info(game, column_x, &hit_data);
+		return (dis_v);
 	}
-	else
-	{
-		store_ray_info(game, column_x, dist_h, h->x, h->y, 0, hit_type_h);
-		return (dist_h);
-	}
+	hit_data = (t_ray_hit_data){dis_h, h->x, h->y, 0,
+		get_hit_type(&game->map, h->x, h->y)};
+	store_ray_info(game, column_x, &hit_data);
+	return (dis_h);
 }
 
 double	ray_casting(t_game *game, double radiant_angle, int column_x)
@@ -75,5 +73,5 @@ double	ray_casting(t_game *game, double radiant_angle, int column_x)
 	h = h_intersection(game->player.x, game->player.y, radiant_angle);
 	cast_vertical_ray(&v, &game->map);
 	cast_horizontal_ray(&h, &game->map);
-	return (calculate_distances_and_store(game, &v, &h, column_x));
+	return (handle_ray_result(game, &v, &h, column_x));
 }

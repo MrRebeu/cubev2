@@ -64,6 +64,23 @@
 
 // ========== STRUCTURES ==========
 
+typedef struct s_ray_hit_data
+{
+	double	distance;
+	double	hit_x;
+	double	hit_y;
+	int		is_vertical;
+	char	hit_type;
+}	t_ray_hit_data;
+
+typedef struct s_minimap_params
+{
+	int	map_x;
+	int	map_y;
+	int	screen_x;
+	int	screen_y;
+}	t_minimap_params;
+
 typedef struct s_pixel_data
 {
 	int				src_x;
@@ -264,6 +281,14 @@ typedef struct s_intersect
 	double				step_y;
 }						t_intersect;
 
+typedef struct s_ray_setup_data
+{
+	t_intersect	*v;
+	t_intersect	*h;
+	double		distances[2];
+	char		types[2];
+}	t_ray_setup_data;
+
 typedef struct s_env
 {
 	void				*mlx;
@@ -391,6 +416,17 @@ typedef struct s_enemy_sprites
 	t_img				death[3];
 }						t_enemy_sprites;
 
+typedef struct s_shoot_params
+{
+	t_enemy	*enemy;
+	double	player_x;
+	double	player_y;
+	double	ray_dir_x;
+	double	ray_dir_y;
+	t_ray	*center_ray;
+}	t_shoot_params;
+
+
 typedef struct s_texture_paths
 {
 	char				*north;
@@ -398,6 +434,15 @@ typedef struct s_texture_paths
 	char				*east;
 	char				*west;
 }						t_texture_paths;
+
+typedef struct s_weapon_pixel_data
+{
+	t_img	*sprite;
+	t_point	pos;
+	int		size;
+	int		i;
+	int		j;
+}	t_weapon_pixel_data;
 
 // ========== CORE FUNCTIONS ==========
 // core/main.c
@@ -491,9 +536,7 @@ t_intersect				h_intersection(int x_player, int y_player,
 int						is_not_wall(t_map *map, double x, double y);
 double					normalize_angle(double angle);
 char					get_hit_type(t_map *map, double x, double y);
-void					store_ray_info(t_game *game, int column_x,
-							double distance, double hit_x, double hit_y,
-							int is_vertical, char hit_type);
+void	store_ray_info(t_game *game, int column_x, t_ray_hit_data *hit_data);
 double					ray_casting(t_game *game, double radiant_angle,
 							int column_x);
 double					no_fish_eye(double min_distance, double radiant_angle,
@@ -524,8 +567,6 @@ void					render_wall_shooted(t_game *game, int column_x,
 
 // render/render_weapons.c
 void					update_weapon_animation(t_game *game);
-void					draw_weapon_pixel(t_game *game, t_img *weapon,
-							t_render *renderer, int tex_x, int tex_y);
 void					render_weapon(t_game *game);
 
 // render/render_floor.c
@@ -542,10 +583,9 @@ void					render_door_shooted(t_game *game, int column_x,
 // ui/minimap.c
 void					init_minimap(t_game *game);
 void					draw_minimap_background(t_game *game);
-void					draw_minimap_cell(t_game *game, int map_x, int map_y,
-							int screen_x, int screen_y);
 void					draw_minimap_cells(t_game *game);
 void					minimap(t_game *game);
+void                    draw_minimap_cell(t_game *game, int positions[4]);
 
 // ui/minimap_player.c
 void					draw_minimap_cone(t_game *game);
@@ -640,7 +680,7 @@ void					execute_healgun_shot(t_game *game);
 void					handle_healgun_shot(t_game *game, t_ray *center_ray);
 
 // shoot/shoot_utils.c
-int						is_enemy_in_line_of_fire(t_game *game, t_enemy *enemy, double player_x, double player_y, double ray_dir_x, double ray_dir_y, t_ray *center_ray);
+int						is_enemy_in_line_of_fire(t_game *game, t_shoot_params *params);
 int						damage_enemy(t_enemy *enemy, t_game *game);
 void					apply_wall_damage(t_game *game, t_ray *center_ray);
 void					apply_damage_to_surface(t_game *game, char hit_type, int map_x, int map_y);
@@ -844,7 +884,7 @@ int						is_healgun_frame_2(t_game *game);
 void					update_weapon_animation(t_game *game);
 void					draw_weapon_sprite(t_game *game, t_render *renderer, t_img *weapon);
 void					draw_weapon_row(t_game *game, t_render *renderer, t_img *weapon);
-void					draw_weapon_pixel(t_game *game, t_img *weapon, t_render *renderer, int tex_x, int tex_y);
+void	draw_weapon_pixel(t_game *game, t_weapon_pixel_data *data);
 
 // weapon/weapon_specific.c
 int						load_hands(t_game *game);
@@ -1003,5 +1043,7 @@ void	draw_cell_pixels(t_game *game, t_minimap *mini_map,
 int	is_valid_screen_pixel(t_minimap *mini_map, int screen_pixel_x,
 		int screen_pixel_y);
 unsigned int	get_cell_color(t_minimap *mini_map, char cell_type);
+void	calculate_weapon_transform(t_game *game, t_weapon_pickup *weapon,
+		t_render *render);
 
 #endif

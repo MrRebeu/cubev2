@@ -42,28 +42,28 @@ void	draw_cell_pixels(t_game *game, t_minimap *mini_map,
 	}
 }
 
-void	draw_minimap_cell(t_game *game, int map_x, int map_y, int screen_x,
-		int screen_y)
+// Solution simple : utiliser un tableau pour regrouper les coordonnées
+void	draw_minimap_cell(t_game *game, int positions[4])
 {
 	t_minimap		*mini_map;
 	char			cell_type;
 	unsigned int	cell_color;
 	int				coords[4];
 
-	if (map_x < 0 || map_x >= game->map.width)
+	if (positions[0] < 0 || positions[0] >= game->map.width)
 		return ;
-	if (map_y < 0 || map_y >= game->map.height)
+	if (positions[1] < 0 || positions[1] >= game->map.height)
 		return ;
 	mini_map = &game->minimap;
-	cell_type = game->map.matrix[map_y][map_x];
+	cell_type = game->map.matrix[positions[1]][positions[0]];
 	cell_color = get_cell_color(mini_map, cell_type);
-	coords[0] = screen_x;
-	coords[1] = screen_y;
+	coords[0] = positions[2];
+	coords[1] = positions[3];
 	draw_cell_pixels(game, mini_map, cell_color, coords);
 }
 
-static void	draw_minimap_row(t_game *game, int *centers,
-		int *player_pos, int row)
+static void	draw_minimap_row(t_game *game, int centers[2],
+		int player_pos[2], int row)
 {
 	t_minimap	*mini_map;
 	int			positions[4];
@@ -77,8 +77,7 @@ static void	draw_minimap_row(t_game *game, int *centers,
 		positions[1] = player_pos[1] + row;
 		positions[2] = centers[0] + col * mini_map->cell_size;
 		positions[3] = centers[1] + row * mini_map->cell_size;
-		draw_minimap_cell(game, positions[0], positions[1],
-			positions[2], positions[3]);
+		draw_minimap_cell(game, positions);
 		col++;
 	}
 }

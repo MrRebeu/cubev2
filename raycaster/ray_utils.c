@@ -22,14 +22,13 @@ char	get_hit_type(t_map *map, double x, double y)
 		return ('1');
 }
 
-void	store_ray_info(t_game *game, int column_x, double distance,
-			double hit_x, double hit_y, int is_vertical, char hit_type)
+void	store_ray_info(t_game *game, int column_x, t_ray_hit_data *hit_data)
 {
-	game->rays[column_x].distance = distance;
-	game->rays[column_x].wall_hit_x = hit_x;
-	game->rays[column_x].wall_hit_y = hit_y;
-	game->rays[column_x].hit_vertical = is_vertical;
-	game->rays[column_x].hit_type = hit_type;
+	game->rays[column_x].distance = hit_data->distance;
+	game->rays[column_x].wall_hit_x = hit_data->hit_x;
+	game->rays[column_x].wall_hit_y = hit_data->hit_y;
+	game->rays[column_x].hit_vertical = hit_data->is_vertical;
+	game->rays[column_x].hit_type = hit_data->hit_type;
 }
 
 double	no_fish_eye(double min_distance, double radiant_angle,

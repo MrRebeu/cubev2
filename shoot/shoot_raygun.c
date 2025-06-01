@@ -9,21 +9,19 @@ void	handle_raygun_shot(t_game *game, t_ray *center_ray)
 
 int	check_enemy_hit(t_game *game, t_ray *center_ray)
 {
-	double	player_x;
-	double	player_y;
-	double	ray_dir_x;
-	double	ray_dir_y;
-	int		i;
+	t_shoot_params	params;
+	int				i;
 
-	player_x = game->player.x;
-	player_y = game->player.y;
-	ray_dir_x = cos(game->player.angle);
-	ray_dir_y = sin(game->player.angle);
+	params.player_x = game->player.x;
+	params.player_y = game->player.y;
+	params.ray_dir_x = cos(game->player.angle);
+	params.ray_dir_y = sin(game->player.angle);
+	params.center_ray = center_ray;
 	i = 0;
 	while (i < game->num_enemies)
 	{
-		if (is_enemy_in_line_of_fire(game, &game->enemies[i],
-				player_x, player_y, ray_dir_x, ray_dir_y, center_ray))
+		params.enemy = &game->enemies[i];
+		if (is_enemy_in_line_of_fire(game, &params))
 			return (damage_enemy(&game->enemies[i], game));
 		i++;
 	}
