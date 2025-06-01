@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 void	init_minimap(t_game *game)
@@ -32,7 +31,8 @@ static int	is_border_pixel(t_minimap *mini_map, int x, int y)
 	return (0);
 }
 
-static void	draw_background_pixel(t_game *game, t_minimap *mini_map, int x, int y)
+static void	draw_background_pixel(t_game *game, t_minimap *mini_map
+		, int x, int y)
 {
 	char			*pixel;
 	unsigned int	color;

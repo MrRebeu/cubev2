@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -I$(MLX_DIR) -I./
 MLX_DIR = ./minilibx-linux
 LDFLAGS = -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm
 
-UI_SRC = ui/minimap.c ui/minimap_2.c ui/minimap_player.c ui/health_bar.c ui/crosshair.c ui/health_bar_2.c 
+UI_SRC = ui/minimap.c ui/minimap_2.c ui/minimap_3.c ui/minimap_player.c ui/health_bar.c ui/crosshair.c ui/health_bar_2.c 
 CORE_SRC = core/main.c core/game_loop.c core/init_game.c core/texture_loader.c core/weapon_loader.c core/enemy_init.c core/enemy_init_2.c core/game_loop_2.c core/init_game_2.c core/texture_loader_2.c core/init_game_3.c
 RAYCASTER_SRC = raycaster/ray_casting.c raycaster/ray_intersection.c raycaster/ray_collision.c raycaster/ray_utils.c
 MAP_SRC = map/file_utils.c map/map_reader.c map/map_validator.c map/player_spawn.c map/enemy_spawn.c

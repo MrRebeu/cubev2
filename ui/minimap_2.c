@@ -62,41 +62,43 @@ void	draw_minimap_cell(t_game *game, int map_x, int map_y, int screen_x,
 	draw_cell_pixels(game, mini_map, cell_color, coords);
 }
 
+static void	draw_minimap_row(t_game *game, int *centers,
+		int *player_pos, int row)
+{
+	t_minimap	*mini_map;
+	int			positions[4];
+	int			col;
+
+	mini_map = &game->minimap;
+	col = -mini_map->visible_radius;
+	while (col <= mini_map->visible_radius)
+	{
+		positions[0] = player_pos[0] + col;
+		positions[1] = player_pos[1] + row;
+		positions[2] = centers[0] + col * mini_map->cell_size;
+		positions[3] = centers[1] + row * mini_map->cell_size;
+		draw_minimap_cell(game, positions[0], positions[1],
+			positions[2], positions[3]);
+		col++;
+	}
+}
+
 void	draw_minimap_cells(t_game *game)
 {
 	t_minimap	*mini_map;
 	int			centers[2];
 	int			player_pos[2];
-	int			positions[6];
+	int			row;
 
 	mini_map = &game->minimap;
 	centers[0] = mini_map->x + mini_map->size / 2;
 	centers[1] = mini_map->y + mini_map->size / 2;
 	player_pos[0] = (int)(game->player.x / TILE_SIZE);
 	player_pos[1] = (int)(game->player.y / TILE_SIZE);
-	positions[0] = -mini_map->visible_radius;
-	while (positions[0] <= mini_map->visible_radius)
+	row = -mini_map->visible_radius;
+	while (row <= mini_map->visible_radius)
 	{
-		positions[1] = -mini_map->visible_radius;
-		while (positions[1] <= mini_map->visible_radius)
-		{
-			positions[2] = player_pos[0] + positions[1];
-			positions[3] = player_pos[1] + positions[0];
-			positions[4] = centers[0] + positions[1] * mini_map->cell_size;
-			positions[5] = centers[1] + positions[0] * mini_map->cell_size;
-			draw_minimap_cell(game, positions[2], positions[3],
-				positions[4], positions[5]);
-			positions[1]++;
-		}
-		positions[0]++;
+		draw_minimap_row(game, centers, player_pos, row);
+		row++;
 	}
-}
-
-void	minimap(t_game *game)
-{
-	if (!game->minimap.show)
-		return ;
-	draw_minimap_background(game);
-	draw_minimap_cells(game);
-	draw_minimap_player(game);
 }
