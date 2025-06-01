@@ -619,16 +619,10 @@ int						damage_enemy_at_position(t_game *game, int tile_x,
 void					update_camera_vectors(t_player *player);
 
 // enemy/enemy_ai.c
-void					idle(t_enemy *e, t_player *p, t_map *m, double dx,
-							double dy, double d);
-void					search(t_enemy *e, t_player *p, t_map *m, double dx,
-							double dy, double d);
-void					shoot(t_enemy *e, t_player *p, t_map *m, double dx,
-							double dy, double d);
-void					melee(t_enemy *e, t_player *p, t_map *m, double dx,
-							double dy, double d);
-void					update_enemy_position_on_map(t_game *game,
-							t_enemy *enemy, double old_x, double old_y);
+void					idle(t_enemy *e, t_player *p, t_map *m);
+void					search(t_enemy *e, t_player *p, t_map *m);
+void					shoot(t_enemy *e, t_player *p, t_map *m);
+void					melee(t_enemy *e, t_player *p, t_map *m);
 
 // enemy/enemy_animation.c
 void					update_death_animation(t_enemy *enemy);
@@ -1072,8 +1066,7 @@ void	apply_random_rotation(t_enemy *e);
 void	set_search_state(t_enemy *e);
 void	set_melee_state(t_enemy *e);
 void	set_shoot_state(t_enemy *e);
-void	move_towards_player(t_enemy *e, t_player *p, t_map *m, double dx, double dy);
-
+void	move_towards_player(t_enemy *e, t_player *p, t_map *m, double angle);
 // enemy/enemy_ai_combat.c
 void	handle_shoot_cooldown(t_enemy *e, t_player *p);
 void	handle_melee_cooldown(t_enemy *e, t_player *p);
