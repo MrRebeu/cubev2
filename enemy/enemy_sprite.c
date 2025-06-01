@@ -1,9 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   enemy_sprite.c - Rendu des sprites d'ennemis                           */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../cube3d.h"
 
 void draw_sprite_pixel(t_game *game, t_img *sprite, t_point pos, int size, t_enemy *enemy, int i, int j)

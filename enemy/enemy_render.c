@@ -1,9 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   enemy_render.c - Rendu principal des ennemis                           */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../cube3d.h"
 
 void calculate_enemy_transform(t_game *game, t_enemy *enemy, t_render *render)
