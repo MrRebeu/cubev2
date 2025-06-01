@@ -40,7 +40,7 @@ void update_weapon_animation(t_game *game)
     }
 }
 
-void draw_weapon_pixel(t_game *game, t_img *weapon, t_render *renderer, int tex_x, int tex_y)
+void draw_weapon_pixel_render(t_game *game, t_img *weapon, t_render *renderer, int tex_x, int tex_y)
 {
     char *dst;
     
@@ -120,7 +120,7 @@ void render_weapon(t_game *game)
             {
                 if (renderer.x + renderer.tex_x >= 0 && renderer.x + renderer.tex_x < DISPLAY_WIDTH)
                 {
-                    draw_weapon_pixel(game, weapon, &renderer, renderer.tex_x, renderer.tex_y);
+                    draw_weapon_pixel_render(game, weapon, &renderer, renderer.tex_x, renderer.tex_y);
                 }
                 renderer.tex_x++;
             }

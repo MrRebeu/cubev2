@@ -17,7 +17,7 @@ void	open_door(t_game *game)
 	toggle_door_state(game, map_x, map_y, cell);
 }
 
-void	calculate_door_check_position(t_game *game, double *check_x, 
+void	calculate_door_check_position(t_game *game, double *check_x,
 		double *check_y)
 {
 	double	player_x;
@@ -67,7 +67,7 @@ t_open_door	*find_door_at_position(t_game *game, int map_x, int map_y)
 	{
 		door_map_x = (int)(game->open_doors[i].x / TILE_SIZE);
 		door_map_y = (int)(game->open_doors[i].y / TILE_SIZE);
-		if (door_map_x == map_x && door_map_y == map_y 
+		if (door_map_x == map_x && door_map_y == map_y
 			&& game->open_doors[i].active)
 			return (&game->open_doors[i]);
 		i++;
