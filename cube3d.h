@@ -1059,5 +1059,5 @@ void	render_shooted_door_column(t_game *game, t_render *renderer,
 			int column_x);
 			void    init_player_basics(t_player *player);
 void    init_player_weapons(t_player *player);
-
+void	draw_weapon_pixel_render(t_game *game, t_img *weapon, t_render *renderer);
 #endif
