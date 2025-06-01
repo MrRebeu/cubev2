@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 int	is_enemy_in_line_of_fire(t_game *game, t_enemy *enemy, double player_x, double player_y, double ray_dir_x, double ray_dir_y, t_ray *center_ray)
@@ -10,6 +9,7 @@ int	is_enemy_in_line_of_fire(t_game *game, t_enemy *enemy, double player_x, doub
 	double	cross_product;
 	double	distance_from_line;
     (void)game;
+	
 	if (!enemy->active || enemy->state == DEAD)
 		return (0);
 	dx_to_enemy = enemy->x - player_x;

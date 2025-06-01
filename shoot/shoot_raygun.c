@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 void	handle_raygun_shot(t_game *game, t_ray *center_ray)
@@ -23,7 +22,8 @@ int	check_enemy_hit(t_game *game, t_ray *center_ray)
 	i = 0;
 	while (i < game->num_enemies)
 	{
-		if (is_enemy_in_line_of_fire(game, &game->enemies[i], player_x, player_y, ray_dir_x, ray_dir_y, center_ray))
+		if (is_enemy_in_line_of_fire(game, &game->enemies[i],
+				player_x, player_y, ray_dir_x, ray_dir_y, center_ray))
 			return (damage_enemy(&game->enemies[i], game));
 		i++;
 	}

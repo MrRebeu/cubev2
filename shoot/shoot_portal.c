@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 void	shoot_portalgun(t_game *game)
@@ -39,6 +38,7 @@ void	handle_portal_shot(t_game *game, t_ray *center_ray)
 	impact_y = center_ray->wall_hit_y;
 	map_x = (int)(impact_x / TILE_SIZE);
 	map_y = (int)(impact_y / TILE_SIZE);
-	portal_orientation = calculate_portal_orientation(center_ray);
-	create_portal(game, map_x, map_y, portal_orientation); // ✅ Fonction du dossier portal/
+	portal_orientation = calculate_portal_orientation
+		(center_ray);
+	create_portal(game, map_x, map_y, portal_orientation);
 }

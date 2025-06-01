@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 void	calculate_shoot(t_game *game)
