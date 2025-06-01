@@ -902,8 +902,8 @@ void					calculate_weapon_screen_pos(t_game *game, t_render *render);
 void					setup_weapon_pickup_render(t_game *game, t_render *renderer);
 void					draw_weapon_pickup_sprite(t_game *game, t_img *sprite, t_point pos, int size);
 void					draw_weapon_pickup_row(t_game *game, t_img *sprite, t_point pos, int size, int i);
-void					draw_weapon_pickup_pixel(t_game *game, t_img *sprite, t_point pos, int size, int i, int j);
-int						is_pickup_pixel_transparent(unsigned int color);
+// void					draw_weapon_pickup_pixel(t_game *game, t_img *sprite, t_point pos, int size, int i, int j);
+// int						is_pickup_pixel_transparent(unsigned int color);
 
 // weapon/weapon_utils.c
 void					handle_scroll_wheel(t_game *game, int button);
@@ -1045,5 +1045,15 @@ int	is_valid_screen_pixel(t_minimap *mini_map, int screen_pixel_x,
 unsigned int	get_cell_color(t_minimap *mini_map, char cell_type);
 void	calculate_weapon_transform(t_game *game, t_weapon_pickup *weapon,
 		t_render *render);
+void	render_weapon_pickup(t_game *game, t_weapon_pickup *weapon);
+int		should_skip_weapon_render(t_game *game, t_weapon_pickup *weapon);
+void	calculate_weapon_screen_pos(t_game *game, t_render *render);
+void	draw_weapon_pickup_sprite(t_game *game, t_img *sprite, t_point pos,
+			int size);
+void	draw_weapon_pickup_pixel(t_game *game, t_weapon_pixel_data *data);
+
+// render/render_weapons.c  
+void	update_weapon_animation(t_game *game);
+void	render_weapon(t_game *game);
 
 #endif
