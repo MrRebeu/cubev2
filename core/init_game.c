@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   init_game.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/12 17:43:46 by tcaccava          #+#    #+#             */
-/*   Updated: 2025/05/26 20:46:48 by tcaccava         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cube3d.h"
 
 int	init_mlx_window(t_game *game)
@@ -49,18 +37,8 @@ void	init_ui_components(t_game *game)
 	init_health_bar(game);
 }
 
-int	init_game(t_game *game, char *map_file)
+static int	load_game_assets(t_game *game)
 {
-	t_player	*player;
-
-	player = &game->player;
-	init_player(player);
-	player->game = game;
-	if (!init_mlx_window(game))
-		return (0);
-	if (!init_map_and_player(game, map_file))
-		return (0);
-	game->current_weapon = HANDS;
 	if (!load_all_textures(game))
 		return (0);
 	if (!load_all_weapons(game))
@@ -77,5 +55,22 @@ int	init_game(t_game *game, char *map_file)
 		return (0);
 	init_portals(game);
 	init_ui_components(game);
+	return (1);
+}
+
+int	init_game(t_game *game, char *map_file)
+{
+	t_player	*player;
+
+	player = &game->player;
+	init_player(player);
+	player->game = game;
+	if (!init_mlx_window(game))
+		return (0);
+	if (!init_map_and_player(game, map_file))
+		return (0);
+	game->current_weapon = HANDS;
+	if (!load_game_assets(game))
+		return (0);
 	return (1);
 }
