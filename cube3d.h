@@ -64,6 +64,16 @@
 
 // ========== STRUCTURES ==========
 
+typedef struct s_pixel_data
+{
+	int				src_x;
+	int				src_y;
+	int				x;
+	int				y;
+	unsigned int	color;
+}	t_pixel_data;
+
+
 typedef struct s_heal_coords
 {
 	int	x;
@@ -986,5 +996,12 @@ int						can_move_to_position(t_game *game, float x, float y);
 void					apply_movement_bounds(t_player *player, float *new_x, float *new_y);
 
 void					init_laser_positions(int *positions, int center_y);
+void	draw_weapon_pixel_at_coords(t_game *game, t_img *weapon, t_render *renderer);
+void	draw_crosshair(t_game *game);
+void	draw_cell_pixels(t_game *game, t_minimap *mini_map,
+		unsigned int cell_color, int coords[4]);
+int	is_valid_screen_pixel(t_minimap *mini_map, int screen_pixel_x,
+		int screen_pixel_y);
+unsigned int	get_cell_color(t_minimap *mini_map, char cell_type);
 
 #endif

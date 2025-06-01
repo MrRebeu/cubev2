@@ -6,84 +6,48 @@ void	setup_weapon_pickup_render(t_game *game, t_render *renderer)
 	renderer->draw_end += 400;
 }
 
-void	draw_weapon_pickup_sprite(t_game *game,
-		t_img *sprite, t_point pos, int size)
+void	draw_weapon_pickup_sprite(t_game *game, t_img *sprite, t_point pos,
+		int size)
 {
 	int	i;
 
 	i = 0;
 	while (i < size)
 	{
-		draw_weapon_pickup_row(game, sprite, pos, size, i);
+		draw_weapon_pickup_row(game, sprite, pos, size);
 		i++;
 	}
 }
 
-void	draw_weapon_pickup_row(t_game *game, t_img *sprite,
-		t_point pos, int size, int i)
+static void	calculate_pixel_coords(t_pixel_data *pixel, t_img *sprite,
+		t_point pos, int size)
 {
-	int	j;
-
-	j = 0;
-	while (j < size)
-	{
-		draw_weapon_pickup_pixel(game, sprite, pos, size, i, j);
-		j++;
-	}
+	if (pixel->src_x >= sprite->width)
+		pixel->src_x = sprite->width - 1;
+	if (pixel->src_y >= sprite->height)
+		pixel->src_y = sprite->height - 1;
+	pixel->x = pos.x + (pixel->src_x * size / sprite->width);
+	pixel->y = pos.y + (pixel->src_y * size / sprite->height);
 }
 
-void	draw_weapon_pickup_pixel(t_game *game,
-		t_img *sprite, t_point pos, int size, int i, int j)
+static void	get_pixel_color(t_pixel_data *pixel, t_img *sprite)
 {
-	int				src_x;
-	int				src_y;
-	int				x;
-	int				y;
-	char			*src;
-	char			*dst;
-	unsigned int	color;
-	int				skip_pixel;
+	char	*src;
 
-	src_x = i * sprite->width / size;
-	src_y = j * sprite->height / size;
-	if (src_x >= sprite->width)
-		src_x = sprite->width - 1;
-	if (src_y >= sprite->height)
-		src_y = sprite->height - 1;
-	src = sprite->addr + src_y * sprite->line_length
-			+ src_x * (sprite->bits_per_pixel / 8);
-	color = *(unsigned int *)src;
-	skip_pixel = is_pickup_pixel_transparent(color);
-	if (!skip_pixel)
-	{
-		x = pos.x + i;
-		y = pos.y + j;
-		if (x >= 0 && x < DISPLAY_WIDTH && y >= 0 && y < DISPLAY_HEIGHT)
-		{
-			dst = game->screen.addr + y * game->screen.line_length
-				+ x * (game->screen.bits_per_pixel / 8);
-			*(unsigned int *)dst = color;
-		}
-	}
+	src = sprite->addr + pixel->src_y * sprite->line_length
+		+ pixel->src_x * (sprite->bits_per_pixel / 8);
+	pixel->color = *(unsigned int *)src;
 }
 
-int	is_pickup_pixel_transparent(unsigned int color)
+static void	draw_single_pixel(t_game *game, t_pixel_data *pixel)
 {
-	int	red;
-	int	green;
-	int	blue;
-	int	tolerance;
+	char	*dst;
 
-	red = (color >> 16) & 0xFF;
-	green = (color >> 8) & 0xFF;
-	blue = color & 0xFF;
-	tolerance = 2;
-	if (red < 10 && green < 10 && blue < 10)
-		return (1);
-	if (abs(red - 255) <= tolerance && abs(green - 0)
-		<= tolerance && abs(blue - 0) <= tolerance)
-		return (1);
-	if (red >= 250 && green >= 160 && green <= 175)
-		return (1);
-	return (0);
+	if (pixel->x >= 0 && pixel->x < DISPLAY_WIDTH
+		&& pixel->y >= 0 && pixel->y < DISPLAY_HEIGHT)
+	{
+		dst = game->screen.addr + pixel->y * game->screen.line_length
+			+ pixel->x * (game->screen.bits_per_pixel / 8);
+		*(unsigned int *)dst = pixel->color;
+	}
 }

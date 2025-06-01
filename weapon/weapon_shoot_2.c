@@ -2,10 +2,6 @@
 
 void	calculate_shoot(t_game *game)
 {
-	double	impact_x;
-	double	impact_y;
-	int		map_x;
-	int		map_y;
 	int		center_ray_index;
 	t_ray	*center_ray;
 
