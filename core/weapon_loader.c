@@ -219,7 +219,6 @@ int load_hands(t_game *game)
         &game->weapons[HANDS][0].endian);
     game->weapons[HANDS][1] = game->weapons[HANDS][0];
     game->weapons[HANDS][2] = game->weapons[HANDS][0];
-    
     return (1);
 }
 

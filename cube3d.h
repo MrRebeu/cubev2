@@ -1055,7 +1055,6 @@ void	draw_weapon_pickup_pixel(t_game *game, t_weapon_pixel_data *data);
 // render/render_weapons.c  
 void	update_weapon_animation(t_game *game);
 void	render_weapon(t_game *game);
-void	render_shooted_door_column(t_game *game, t_render *renderer, 
-				int column_x, int cy, double h);
-
+void	render_shooted_door_column(t_game *game, t_render *renderer,
+			int column_x);
 #endif

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   init_game_2.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/05 11:25:20 by tcaccava          #+#    #+#             */
-/*   Updated: 2025/05/26 22:33:51 by tcaccava         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cube3d.h"
 
 void	init_player(t_player *player)
@@ -34,19 +22,18 @@ void	init_player(t_player *player)
 	player->weapon.is_firing = 0;
 	player->fire_cooldown = 0;
 	player->has_weapon[HANDS] = true;
-    player->has_weapon[RAYGUN] = false;
-    player->has_weapon[PORTALGUN] = false;
+	player->has_weapon[RAYGUN] = false;
+	player->has_weapon[PORTALGUN] = false;
 	player->has_weapon[HEALGUN] = false;
 	player->has_weapon[HEALGUN] = false;
 	player->healgun_ammo = 0;
-    player->healgun_ammo = 0;
-    player->healgun_is_loaded = 0;
-    player->healgun_animating = 0;
-    player->healgun_anim_frame = 0;
-    player->healgun_anim_timer = 0;
-	player->move_speed = 10;   
+	player->healgun_ammo = 0;
+	player->healgun_is_loaded = 0;
+	player->healgun_animating = 0;
+	player->healgun_anim_frame = 0;
+	player->healgun_anim_timer = 0;
+	player->move_speed = 10;
 	player->rot_speed = 0.05;
-
 }
 
 void	init_rays(t_game *game)
@@ -73,7 +60,10 @@ void	init_rays(t_game *game)
 
 static int	init_standard_mode(t_game *game, char **argv)
 {
-	if (check_file_cub(argv[1]) == 0)
+	int	valid;
+
+	valid = check_file_cub(argv[1]);
+	if (valid == 0)
 	{
 		printf("Usage: %s <map_file.cub>\n", argv[0]);
 		return (0);
@@ -89,8 +79,10 @@ static int	init_standard_mode(t_game *game, char **argv)
 static int	init_texture_mode(t_game *game, char **argv)
 {
 	t_texture_paths	paths;
+	int				valid;
 
-	if (check_file_cub(argv[1]) == 0)
+	valid = check_file_cub(argv[1]);
+	if (valid == 0)
 		return (0);
 	paths.north = argv[2];
 	paths.south = argv[3];

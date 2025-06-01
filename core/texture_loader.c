@@ -12,7 +12,6 @@
 
 #include "cube3d.h"
 
-
 int	load_basic_textures(t_game *game)
 {
 	int	width;

@@ -43,46 +43,39 @@ int	init_map_and_player(t_game *game, char *map_file)
 	return (1);
 }
 
-// void init_portals(t_game *game)
-// {
-//     game->portal_1.is_active = 0;
-//     game->portal_1.orientation = 0;
-//     game->portal_2.is_active = 0;
-//     game->portal_2.orientation = 0;
-//     game->portal_count = 0;
-// }
-
 void	init_ui_components(t_game *game)
 {
 	init_minimap(game);
 	init_health_bar(game);
 }
 
-
-int init_game(t_game *game, char *map_file)
+int	init_game(t_game *game, char *map_file)
 {
-    init_player(&game->player);
-    game->player.game = game;
-    if (!init_mlx_window(game))
-        return (0);
-    if (!init_map_and_player(game, map_file))
-        return (0);
-    game->current_weapon = HANDS;
-    if (!load_all_textures(game))
-        return (0);
-    if (!load_all_weapons(game))
-        return (0);
-    if (!load_weapon_pickup_sprites(game)) // ← NOUVEAU
-        return (0);
-    if (!set_weapon_positions(game)) // ← NOUVEAU
-        return (0);
-    if (!load_open_door_sprites(game))  // ✅ NOUVEAU
-        return (0);
-    if (!set_open_door_positions(game)) // ✅ NOUVEAU
-        return (0);
-    if (!init_all_enemies(game))
-        return (0);
-    init_portals(game);
-    init_ui_components(game);
-    return (1);
+	t_player	*player;
+
+	player = &game->player;
+	init_player(player);
+	player->game = game;
+	if (!init_mlx_window(game))
+		return (0);
+	if (!init_map_and_player(game, map_file))
+		return (0);
+	game->current_weapon = HANDS;
+	if (!load_all_textures(game))
+		return (0);
+	if (!load_all_weapons(game))
+		return (0);
+	if (!load_weapon_pickup_sprites(game))
+		return (0);
+	if (!set_weapon_positions(game))
+		return (0);
+	if (!load_open_door_sprites(game))
+		return (0);
+	if (!set_open_door_positions(game))
+		return (0);
+	if (!init_all_enemies(game))
+		return (0);
+	init_portals(game);
+	init_ui_components(game);
+	return (1);
 }
