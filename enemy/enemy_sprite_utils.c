@@ -1,4 +1,3 @@
-
 #include "../cube3d.h"
 
 t_img	*get_death_sprite(t_enemy *enemy)

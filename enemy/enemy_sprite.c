@@ -18,6 +18,7 @@ void	draw_enemy_sprite(t_game *game, t_img *sprite,
 	int	i;
 	int	j;
 
+	(void)enemy;
 	if (!sprite || !sprite->addr || size <= 0)
 		return ;
 	i = 0;
@@ -48,6 +49,6 @@ void	render_death_animation(t_game *game, t_enemy *enemy)
 		return ;
 	finalize_death_render(game, &renderer);
 	draw_enemy_sprite(game, current_sprite,
-    	(t_point){renderer.draw_start, renderer.draw_end},
-    	renderer.sprite_size);
+		(t_point){renderer.draw_start, renderer.draw_end},
+		renderer.sprite_size, enemy);
 }
