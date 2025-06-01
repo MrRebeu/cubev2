@@ -1074,4 +1074,11 @@ void	handle_old_enemy_position(t_game *game, int old_map_x, int old_map_y);
 
 // enemy/enemy_ai_position.c  
 void	update_enemy_position_on_map(t_game *game, t_enemy *enemy, double old_x, double old_y);
+// enemy/enemy_render_utils.c
+void    calculate_enemy_transform(t_game *game, t_enemy *enemy, t_render *render);
+void    calculate_enemy_screen_pos(t_game *game, t_render *render);
+int     check_enemy_occlusion(t_game *game, t_render *render);
+void    setup_enemy_render_params(t_game *game, t_render *render);
+int	calculate_sprite_bounds(t_render *render, int *start, int *end);
+
 #endif
