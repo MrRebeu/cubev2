@@ -1067,4 +1067,18 @@ int		is_valid_screen_coord(int coords[2]);
 void	set_pickup_pixel_color(t_game *game, int coords[2], unsigned int color);
 void	setup_weapon_pickup_render(t_game *game, t_render *renderer);
 
+// enemy/enemy_ai_utils.c
+void	apply_random_rotation(t_enemy *e);
+void	set_search_state(t_enemy *e);
+void	set_melee_state(t_enemy *e);
+void	set_shoot_state(t_enemy *e);
+void	move_towards_player(t_enemy *e, t_player *p, t_map *m, double dx, double dy);
+
+// enemy/enemy_ai_combat.c
+void	handle_shoot_cooldown(t_enemy *e, t_player *p);
+void	handle_melee_cooldown(t_enemy *e, t_player *p);
+void	handle_old_enemy_position(t_game *game, int old_map_x, int old_map_y);
+
+// enemy/enemy_ai_position.c  
+void	update_enemy_position_on_map(t_game *game, t_enemy *enemy, double old_x, double old_y);
 #endif
