@@ -32,7 +32,7 @@ void	draw_enemy_sprite(t_game *game, t_img *sprite,
 		while (j < renderer->sprite_size)
 		{
 			data = (t_weapon_pixel_data){sprite, pos,
-				renderer->sprite_size, i, j};
+				renderer->sprite_size, i, j, enemy->state};
 			draw_sprite_pixel_at_pos(game, &data);
 			j++;
 		}

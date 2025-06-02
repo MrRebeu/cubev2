@@ -59,13 +59,11 @@ static void	draw_pixel_to_screen(t_game *game, t_pixel_data *pixel,
 void	draw_sprite_pixel_at_pos(t_game *game, t_weapon_pixel_data *data)
 {
 	t_pixel_data	pixel;
-	int				enemy_state;
 
 	pixel.x = data->i;
 	pixel.y = data->j;
-	enemy_state = IDLE;
 	calculate_src_coords(&pixel, data->sprite, data->size);
 	get_sprite_color(&pixel, data->sprite);
-	if (!should_skip_pixel(pixel.color, enemy_state))
+	if (!should_skip_pixel(pixel.color, data->enemy_state))
 		draw_pixel_to_screen(game, &pixel, data->pos);
 }

@@ -442,6 +442,7 @@ typedef struct s_weapon_pixel_data
 	int		size;
 	int		i;
 	int		j;
+	int		enemy_state;
 }	t_weapon_pixel_data;
 
 typedef struct s_los_data
