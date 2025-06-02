@@ -56,7 +56,5 @@ void	render_enemy(t_game *game, t_enemy *enemy)
 	if (!is_visible)
 		return ;
 	setup_enemy_render_params(game, &renderer);
-	draw_enemy_sprite(game, current_sprite,
-		(t_point){renderer.draw_start, renderer.draw_end},
-		renderer.sprite_size, enemy);
+	draw_enemy_sprite(game, current_sprite, &renderer, enemy);
 }

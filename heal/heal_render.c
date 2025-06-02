@@ -11,6 +11,7 @@ void	render_healgun_animation(t_game *game)
 	arm_y = DISPLAY_HEIGHT - arm_sprite->height - 50;
 	draw_arm_sprite(game, arm_sprite, arm_x, arm_y);
 }
+
 void	draw_heal_pixel(t_game *game, t_img *sprite, int x, int y)
 {
 	t_heal_coords	coords;

@@ -32,7 +32,8 @@ int	enemy_sees_you(t_enemy *enemy, t_player *player, t_map *map)
 	fov = M_PI;
 	if (fabs(delta_angle) < fov / 2)
 	{
-		if (line_of_sight(enemy->x, enemy->y, player->x, player->y, map))
+		if (line_of_sight((t_point){enemy->x, enemy->y},
+			(t_point){player->x, player->y}, map))
 			return (1);
 	}
 	return (0);

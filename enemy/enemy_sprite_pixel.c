@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   enemy_sprite_pixel.c                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tcaccava <tcaccava@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 23:09:16 by tcaccava          #+#    #+#             */
-/*   Updated: 2025/05/26 23:09:21 by tcaccava         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../cube3d.h"
 
 static int	should_skip_pixel(unsigned int color, int enemy_state)
@@ -68,17 +56,16 @@ static void	draw_pixel_to_screen(t_game *game, t_pixel_data *pixel,
 	}
 }
 
-void	draw_sprite_pixel_at_pos(t_game *game, t_img *sprite,
-		t_point pos, int size, int i, int j)
+void	draw_sprite_pixel_at_pos(t_game *game, t_weapon_pixel_data *data)
 {
 	t_pixel_data	pixel;
 	int				enemy_state;
 
-	pixel.x = i;
-	pixel.y = j;
+	pixel.x = data->i;
+	pixel.y = data->j;
 	enemy_state = IDLE;
-	calculate_src_coords(&pixel, sprite, size);
-	get_sprite_color(&pixel, sprite);
+	calculate_src_coords(&pixel, data->sprite, data->size);
+	get_sprite_color(&pixel, data->sprite);
 	if (!should_skip_pixel(pixel.color, enemy_state))
-		draw_pixel_to_screen(game, &pixel, pos);
+		draw_pixel_to_screen(game, &pixel, data->pos);
 }

@@ -51,6 +51,23 @@ void	search(t_enemy *e, t_player *p, t_map *m)
 		move_towards_player(e, p, m, atan2(dy, dx));
 }
 
+static void	handle_shoot_distance(t_enemy *e, t_player *p,
+		double distance_in_tiles, t_point direction)
+{
+	if (distance_in_tiles >= 6.0)
+	{
+		e->state = SEARCH;
+		return ;
+	}
+	if (distance_in_tiles < 1.5)
+		set_melee_state(e);
+	else
+	{
+		e->angle = atan2(direction.y, direction.x);
+		handle_shoot_cooldown(e, p);
+	}
+}
+
 void	shoot(t_enemy *e, t_player *p, t_map *m)
 {
 	double	dx;
@@ -68,18 +85,7 @@ void	shoot(t_enemy *e, t_player *p, t_map *m)
 		e->sees_player = 0;
 		return ;
 	}
-	if (distance_in_tiles >= 6.0)
-	{
-		e->state = SEARCH;
-		return ;
-	}
-	if (distance_in_tiles < 1.5)
-		set_melee_state(e);
-	else
-	{
-		e->angle = atan2(dy, dx);
-		handle_shoot_cooldown(e, p);
-	}
+	handle_shoot_distance(e, p, distance_in_tiles, (t_point){dx, dy});
 }
 
 void	melee(t_enemy *e, t_player *p, t_map *m)

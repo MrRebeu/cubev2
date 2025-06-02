@@ -1,18 +1,18 @@
 #include "cube3d.h"
 
-static void	init_los_data(t_los_data *d, double ex,
-		double ey, double px, double py)
+static void	init_los_data(t_los_data *d, t_point enemy_pos,
+		t_point player_pos)
 {
 	double	dx;
 	double	dy;
 
-	dx = px - ex;
-	dy = py - ey;
+	dx = player_pos.x - enemy_pos.x;
+	dy = player_pos.y - enemy_pos.y;
 	d->distance = sqrt(dx * dx + dy * dy);
 	d->step_x = (dx / d->distance) * 5.0;
 	d->step_y = (dy / d->distance) * 5.0;
-	d->x = ex;
-	d->y = ey;
+	d->x = enemy_pos.x;
+	d->y = enemy_pos.y;
 	d->traveled = 0.0;
 }
 
@@ -28,11 +28,11 @@ static int	check_wall_hit(t_los_data *d, t_map *map)
 	return (map->matrix[map_y][map_x] == '1');
 }
 
-int	line_of_sight(double ex, double ey, double px, double py, t_map *map)
+int	line_of_sight(t_point enemy_pos, t_point player_pos, t_map *map)
 {
 	t_los_data	d;
 
-	init_los_data(&d, ex, ey, px, py);
+	init_los_data(&d, enemy_pos, player_pos);
 	while (d.traveled < d.distance)
 	{
 		if (check_wall_hit(&d, map))
