@@ -444,6 +444,16 @@ typedef struct s_weapon_pixel_data
 	int		j;
 }	t_weapon_pixel_data;
 
+typedef struct s_los_data
+{
+	double				distance;
+	double				step_x;
+	double				step_y;
+	double				x;
+	double				y;
+	double				traveled;
+}						t_los_data;
+
 // ========== CORE FUNCTIONS ==========
 // core/main.c
 void					init_player(t_player *player);
