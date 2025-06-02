@@ -1099,4 +1099,6 @@ void	finalize_death_render(t_game *game, t_render *renderer);
 // enemy/enemy_sprite_debug.c
 void	print_death_debug(t_enemy *enemy, t_render *renderer);
 
+double	calculate_distance_to_weapon(t_game *game, t_weapon_pickup *weapon);
+
 #endif

@@ -4,10 +4,14 @@ void	render_weapon_pickup(t_game *game, t_weapon_pickup *weapon)
 {
 	t_render	renderer;
 	int			is_visible;
+	double		distance_to_player;
 
 	if (!weapon->active)
 		return ;
 	if (should_skip_weapon_render(game, weapon))
+		return ;
+	distance_to_player = calculate_distance_to_weapon(game, weapon);
+	if (distance_to_player > 200)
 		return ;
 	calculate_weapon_transform(game, weapon, &renderer);
 	if (renderer.floor_y <= 0.2f)

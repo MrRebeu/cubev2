@@ -40,7 +40,11 @@ void	execute_teleportation(t_game *game, t_portal *dest_portal)
 	dest_x = (int)(dest_portal->x / TILE_SIZE);
 	dest_y = (int)(dest_portal->y / TILE_SIZE);
 	if (try_teleport_at_direction(game, dest_x, dest_y, exit_direction))
+	{
+		remove_all_portals(game);
 		return ;
+	}
+	remove_all_portals(game);
 	emergency_teleport(game, dest_portal);
 }
 

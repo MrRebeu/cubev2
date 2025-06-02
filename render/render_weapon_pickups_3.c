@@ -51,3 +51,13 @@ void	setup_weapon_pickup_render(t_game *game, t_render *renderer)
 	setup_enemy_render_params(game, renderer);
 	renderer->draw_end += 400;
 }
+
+double	calculate_distance_to_weapon(t_game *game, t_weapon_pickup *weapon)
+{
+	double	dx;
+	double	dy;
+
+	dx = weapon->x - game->player.x;
+	dy = weapon->y - game->player.y;
+	return (sqrt(dx * dx + dy * dy));
+}

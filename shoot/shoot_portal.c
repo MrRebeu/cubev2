@@ -11,16 +11,16 @@ int	calculate_portal_orientation(t_ray *center_ray)
 	if (center_ray->hit_vertical)
 	{
 		if (cos(center_ray->radiant_angle) > 0)
-			return (3);
+			return (1);  // East - portail face à l'Est
 		else
-			return (1);
+			return (3);  // West - portail face à l'Ouest
 	}
 	else
 	{
 		if (sin(center_ray->radiant_angle) > 0)
-			return (0);
+			return (2);  // South - portail face au Sud
 		else
-			return (2);
+			return (0);  // North - portail face au Nord
 	}
 }
 
